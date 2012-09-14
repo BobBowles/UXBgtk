@@ -1,0 +1,35 @@
+# files to ignore
+syntax:glob
+
+# various editor backup files
+*~
+.\#*
+.*.swp
+
+# NetBeans project files
+nbproject/**/*.*
+nbproject/*.*
+
+# Eclipse project files
+**/.project
+**/.pydevproject
+.pydevproject
+.project
+
+# CVS files
+**/CVS/*
+
+# pida files
+*.pidaproject
+
+# python build files
+*.pyc
+
+# setup.py files
+build/**/*.*
+dist/*.*
+MANIFEST
+
+# development files
+src/*.txt
+
