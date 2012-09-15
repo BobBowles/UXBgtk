@@ -120,7 +120,8 @@ class GridWindow(Gtk.Frame):
 
         if self.exploded: self.endGame(False)
 
-        elif not ((self.rows * self.cols) - (self.flags + self.exposed)):
+        elif not ((self.rows * self.cols) - (self.flags + self.exposed)) \
+                  and not (self.flags - self.nmines):
             self.endGame(True)
 
 
@@ -129,23 +130,26 @@ class GridWindow(Gtk.Frame):
 
         self.gameOver = True # avoids recursion issues during cleardown
 
+        # clear down the grid
+        for button in self.btnLookup.values():
+            if button.exposed: continue
+
+            elif button.flagged:
+                if button.mined: # button correctly flagged
+                    button.set_sensitive(False)
+
+                else: # incorrect flag - remove it
+                    button.flagged = False
+                    button.set_active(True)
+                    self.updateFlags(False)
+
+            # 'press' the button
+            button.leftMouse(button)
+
+        # update the start button image
         if success:
             updateImage(self.parent.startImage, 'Win', TOOL_SIZE)
         else:
-            # clear down the grid
-            for button in self.btnLookup.values():
-                if button.exposed: continue
-                elif button.flagged:
-                    if button.mined: continue
-
-                    # if the flag was bad remove it
-                    else:
-                        button.flagged = False
-                        self.updateFlags(False)
-
-                # TODO press the button
-                button.leftMouse(button)
-
             updateImage(self.parent.startImage, 'Lose', TOOL_SIZE)
 
 
@@ -170,7 +174,7 @@ class GridWindow(Gtk.Frame):
             # at the start of the game no need to check neighbours
             else:
                 # look for a button with no neighbour mines
-                if not button.neighbourMines.get():
+                if not button.neighbourMines:
                     # left-click the button
                     button.leftMouse(button)
                     return

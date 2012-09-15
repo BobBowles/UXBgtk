@@ -48,6 +48,7 @@ class UXBgtk:
         self.hintImage = getImage('Hint')
         updateImage(self.hintImage, 'Hint', TOOL_SIZE)
         self.hintButton.add(self.hintImage)
+        self.hintButton.set_sensitive(False)
 
         # the configurationBox and its model
         self.configurations = self.builder.get_object('configurations')
@@ -76,7 +77,7 @@ class UXBgtk:
     def start(self):
         """Start a new game."""
 
-        # TODO reset the start button image
+        # reset the start button image
         updateImage(self.startImage, 'Start', TOOL_SIZE)
 
         # get the grid information from the configuration box.
@@ -88,12 +89,22 @@ class UXBgtk:
         mines.extend([False] * (cols * rows - nMines))
         random.shuffle(mines)
 
+        # reset the status bar
+        self.exposedCount.set_text('0')
+        self.exposedLabel.set_text('/ ' + str(cols * rows - nMines))
+        self.flagCount.set_text('0')
+        self.flagLabel.set_text('/ ' + str(nMines))
+
         # destroy the old game if it exists
         if self.gameGrid: self.gameGrid.destroy()
 
+        # make the new game
         self.gameGrid = GridWindow(parent=self,
                                    cols=cols, rows=rows, mines=mines)
         self.gridContainer.add_with_viewport(self.gameGrid)
+
+        # start the game
+        self.hintButton.set_sensitive(True)
         self.gameGrid.start()
         self.window.show_all()
 
@@ -118,6 +129,7 @@ class UXBgtk:
 
         # TODO need some functionality here
         print('Hint Button Clicked')
+        self.gameGrid.giveHint()
 
 
     def on_quitButton_clicked(self, widget):

@@ -163,6 +163,7 @@ class GridButton(Gtk.ToggleButton):
 
         # exclusions
         if not self.get_sensitive(): return False
+        if self.get_active(): return False
         if self.exposed: return False
         if self.flagged: return False
 
@@ -221,7 +222,7 @@ class GridButton(Gtk.ToggleButton):
 
         # this is for when invoked by the game grid when giving hints
         if widget != self:
-            self.master.incrementExposedCount(1)
+            self.parent.incrementExposedCount(1)
 
 
     def rightMouse(self):
