@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-from gi.repository import Gtk
-from constants import UI_BUILD_FILE, TOOL_BUTTON_SIZE
+from gi.repository import Gtk, Gdk
+from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE
 from getImage import initializeImages, getImage, updateImage
 from gridWindow import GridWindow
 
@@ -41,14 +41,12 @@ class UXBgtk:
         # these are the toolbar widgets
         self.startButton = self.builder.get_object('startButton')
         self.startImage = getImage('Start')
-        updateImage(self.startImage, 'Start',
-                    (TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE))
+        updateImage(self.startImage, 'Start', TOOL_SIZE)
         self.startButton.add(self.startImage)
 
         self.hintButton = self.builder.get_object('hintButton')
         self.hintImage = getImage('Hint')
-        updateImage(self.hintImage, 'Hint',
-                    (TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE))
+        updateImage(self.hintImage, 'Hint', TOOL_SIZE)
         self.hintButton.add(self.hintImage)
 
         # the configurationBox and its model
@@ -57,8 +55,7 @@ class UXBgtk:
 
         self.quitButton = self.builder.get_object('quitButton')
         self.quitImage = getImage('Quit')
-        updateImage(self.quitImage, 'Quit',
-                    (TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE))
+        updateImage(self.quitImage, 'Quit', TOOL_SIZE)
         self.quitButton.add(self.quitImage)
 
         # these are the status bar widgets
@@ -80,7 +77,7 @@ class UXBgtk:
         """Start a new game."""
 
         # TODO reset the start button image
-        #self.setImage(self.startButton, 'Start')
+        updateImage(self.startImage, 'Start', TOOL_SIZE)
 
         # get the grid information from the configuration box.
         activeConfiguration = self.configurationBox.get_active_iter()
@@ -94,7 +91,8 @@ class UXBgtk:
         # destroy the old game if it exists
         if self.gameGrid: self.gameGrid.destroy()
 
-        self.gameGrid = GridWindow(parent=self, cols=cols, rows=rows, mines=mines)
+        self.gameGrid = GridWindow(parent=self,
+                                   cols=cols, rows=rows, mines=mines)
         self.gridContainer.add_with_viewport(self.gameGrid)
         self.gameGrid.start()
         self.window.show_all()
@@ -142,8 +140,17 @@ class UXBgtk:
 
         self.gameGrid.resize(allocation)
 
-
+# load the image pixbuf cache
 initializeImages()
+
+# configure themed styles for the grid buttons
+cssProvider = Gtk.CssProvider()
+cssProvider.load_from_path(UI_CSS_FILE)
+screen = Gdk.Screen.get_default()
+styleContext = Gtk.StyleContext()
+styleContext.add_provider_for_screen(screen, cssProvider,
+                                     Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
 app = UXBgtk()
 Gtk.main()
 

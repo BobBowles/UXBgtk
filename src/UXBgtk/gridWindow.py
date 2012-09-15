@@ -16,6 +16,8 @@
 from gi.repository import Gtk
 import random
 from gridButton import GridButton
+from getImage import updateImage
+from constants import TOOL_SIZE
 
 
 
@@ -50,7 +52,7 @@ class GridWindow(Gtk.Frame):
         # the x-axis
         self.xAxis = Gtk.HBox()
         self.add(self.xAxis)
-        
+
         # the y-axes
         self.yAxis = list()
         for x in range(self.cols):
@@ -65,7 +67,7 @@ class GridWindow(Gtk.Frame):
         """Make up the grid of buttons for the game."""
         for x in range(self.cols):
             col = self.yAxis[x]
-            
+
             for y in range(self.rows):
 
                 # grid button
@@ -73,7 +75,7 @@ class GridWindow(Gtk.Frame):
                                     pos=(x, y),
                                     mined=self.mines.pop())
                 col.pack_start(button, True, True, 0)
-                
+
                 # add to the dictionary
                 self.btnLookup[(x, y)] = button
 
@@ -94,7 +96,7 @@ class GridWindow(Gtk.Frame):
         if self.gameOver: return
 
         self.exposed += increment
-        self._root().gameWindow.statusbar.exposed.set(self.exposed)
+        self.parent.exposedCount.set_text(str(self.exposed))
 
         # test if we have won
         self.haveWeWonYet()
@@ -107,7 +109,7 @@ class GridWindow(Gtk.Frame):
 
         if increment: self.flags += 1
         else: self.flags -= 1
-        self._root().gameWindow.statusbar.flags.set(self.flags)
+        self.parent.flagCount.set_text(str(self.flags))
 
         # test if we have won
         if not self.gameOver: self.haveWeWonYet()
@@ -128,9 +130,7 @@ class GridWindow(Gtk.Frame):
         self.gameOver = True # avoids recursion issues during cleardown
 
         if success:
-            self._root().gameWindow.toolbar.setImage(
-                self._root().gameWindow.toolbar.startButton,
-                'Win')
+            updateImage(self.parent.startImage, 'Win', TOOL_SIZE)
         else:
             # clear down the grid
             for button in self.btnLookup.values():
@@ -146,10 +146,7 @@ class GridWindow(Gtk.Frame):
                 # TODO press the button
                 button.leftMouse(button)
 
-            self._root().gameWindow.toolbar.setImage(
-                self._root().gameWindow.toolbar.startButton,
-                'Lose')
-
+            updateImage(self.parent.startImage, 'Lose', TOOL_SIZE)
 
 
     def giveHint(self):
@@ -185,7 +182,7 @@ class GridWindow(Gtk.Frame):
         # work out the best size for the grid buttons
         gridWidth = allocation.width
         gridHeight = allocation.height
-        
+
         buttonWidth = gridWidth // self.cols - 10
         buttonHeight = gridHeight // self.rows - 10
 
@@ -199,77 +196,4 @@ class GridWindow(Gtk.Frame):
         # now tell the buttons to sort themselves out
         for button in self.btnLookup.values():
             button.resize((buttonWidth, buttonHeight))
-
-
-        
-#        # THIS IS TTK
-#        # get geometry info from the root window.
-#        geometry = self._root().geometry()
-#        #print('Start geometry is '+geometry)
-#        wm, hm, x, y = parseGeometry(geometry)
-#
-#        # calculate the padding allowances - allow for toolbar & status bar
-#        padx = 20 + (self.cols - 1)*1
-#        barHeight = 20 + self._root().gameWindow.toolbar.imageSize
-#        pady = 20 + barHeight + (self.rows - 1)*1
-#
-#        # get current dimensions, work out a sensible minimum
-#        buttonHeight = (hm - pady) // self.rows
-#        buttonWidth = (wm - padx) // self.cols
-#        buttonDimension = max([buttonHeight, buttonWidth])
-#        if buttonDimension < 20: buttonDimension = 20
-#        
-#        # maximum window sizes
-#        maxx, maxy = self._root().maxsize()
-#        wnew = (self.cols * buttonDimension) + padx
-#        hnew = (self.rows * buttonDimension) + pady
-#        if wnew > maxx or hnew > maxy:
-#            buttonDx = buttonDy = buttonDimension
-#            if wnew > maxx:
-#                buttonDx = (maxx - padx) // self.cols
-#            if hnew > maxy:
-#                buttonDy = (maxy - pady) // self.rows
-#            buttonDimension = min([buttonDx, buttonDy])
-#            wnew = (self.cols * buttonDimension) + padx
-#            hnew = (self.rows * buttonDimension) + pady
-#            
-#        # resize the main window to the button dimensions
-#        geometry = '%dx%d+%d+%d' % (wnew, hnew, x, y)
-#        #print('New   geometry is '+geometry)
-#        self._root().geometry(geometry)
-#
-#        # choose a font height to match
-#        # note we assume optimal font height is 1/2 widget height.
-#        fontHeight = buttonDimension // 2
-#        #print('Resizing to font '+str(fontHeight))
-#
-#        # calculate the best font to use (use int rounding)
-#        bestStyle = fontStyle[10]               # use min size as the fallback
-#        if fontHeight < 10: pass                # the min size
-#        elif fontHeight >= 50:                  # the max size
-#            bestStyle = fontStyle[50]
-#        else:                                   # everything in between
-#            bestFitFont = (fontHeight // 5) * 5
-#            bestStyle = fontStyle[bestFitFont]
-#
-#        # set the style on the buttons
-#        for button in self.btnLookup.values(): button.setStyle(bestStyle)
-#
-#
-#def parseGeometry(geometry):
-#    """Geometry parser.
-#    Returns the geometry as a (w, h, x, y) tuple."""
-#
-#    # get w
-#    xsplit = geometry.split('x')
-#    w = int(xsplit[0])
-#    rest = xsplit[1]
-#
-#    # get h, x, y
-#    plussplit = rest.split('+')
-#    h = int(plussplit[0])
-#    x = int(plussplit[1])
-#    y = int(plussplit[2])
-#
-#    return w, h, x, y
 

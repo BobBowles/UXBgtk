@@ -15,7 +15,7 @@
 
 from gi.repository import Gtk
 from getImage import getImage, updateImage
-from constants import GRID_BUTTON_SIZE
+from constants import TOOL_SIZE, GRID_SIZE
 
 
 # grid direction vectors (8 points of the compass)
@@ -27,7 +27,7 @@ for x in range(-1, 2):
 
 
 
-class GridButton(Gtk.Button):
+class GridButton(Gtk.ToggleButton):
     """Visual representation of a minefield grid square. Contains all the
     information it needs to display itself and interact with the game."""
 
@@ -38,7 +38,7 @@ class GridButton(Gtk.Button):
 
         super().__init__()
 
-        # the global application parent object and the game grid
+        # the game grid parent
         self.parent = parent
 
         # this button's grid position.
@@ -54,26 +54,17 @@ class GridButton(Gtk.Button):
         # TODO initialize the mine count to zero
         self.neighbourMines = 0
 
-        # TODO need to convert from ttk
-#        self['textvariable'] = self.neighbourMines
-#        self['width'] = 2 # width of the text field
-
         # initialize the neighbour flag count to zero
         self.neighbourFlags = 0
 
         # flag to emulate disabled when mines are exposed
         self.exposed = False
 
-        # TODO  Convert from ttk: initialize the image to empty at 20 pixels
-#        self.imageSize = 20
-#        self.imageKey = 'Empty'
-#        self.setImage()
-#        self['compound'] = 'image'
-        self.imageKey = 'Explosion'
+        # initialize the image to empty at 20 pixels
+        self.imageKey = 'Empty'
         self.image = getImage(self.imageKey)
         self.add(self.image)
-        updateImage(self.image, self.imageKey,
-                    (GRID_BUTTON_SIZE, GRID_BUTTON_SIZE))
+        updateImage(self.image, self.imageKey, GRID_SIZE)
 
         # TODO convert from ttk: initialize the font key to 10 pixels (half image size).
 #        self.fontKey = '.'.join([str(self.imageSize // 2), 'TButton'])
@@ -90,7 +81,6 @@ class GridButton(Gtk.Button):
         # set up the GTK event handlers
         self.connect("button_press_event", self.on_button_press_event)
         self.connect("button_release_event", self.on_button_release_event)
-
 
 
     def updateNeighbourMines(self):
@@ -121,44 +111,6 @@ class GridButton(Gtk.Button):
         else: self.neighbourFlags -= 1
 
 
-    def setImage(self):
-        """Set the image on the button using the key. """
-
-        # TODO need to convert from ttk
-        pass
-
-#        self['image'] = getImage(self, self.imageSize, self.imageKey)
-
-
-    def setFont(self):
-        """Set up the font to use for text. This also changes the background
-        colour of the button. Different styles for different numbers of mines
-        gives the numbers different foreground colours."""
-
-        # TODO we need to convert this from ttk
-        pass
-#        # use a different background if the button has not been exposed
-#        if self.exposed:
-#            self['style'] = '.'.join([str(self.neighbourMines.get()),
-#                                      self.fontKey])
-#        else:
-#            self['style'] = self.fontKey
-
-
-    def setStyle(self, fontKey):
-        """Choose the style to use according to the font key passed, and set
-        the image size to match."""
-
-        # TODO need to convert from ttk
-        pass
-#        
-#        self.fontKey = fontKey
-#        self.setFont()
-#
-#        # configure the image to match the font size
-#        self.imageSize = int(fontKey.split('.')[0]) * 2
-#        self.setImage()
-
     def resize(self, size):
         """Resize the grid button's child (image or text) to match the current
         window size. (The button looks after itself.)"""
@@ -172,31 +124,45 @@ class GridButton(Gtk.Button):
         updateImage(self.image, self.imageKey, size)
 
 
+    def getSize(self):
+        """Utility to get the button's allocated size as an (x, y) tuple.
+        Returns (x, y)."""
+
+        return self.get_allocated_width(), self.get_allocated_height()
+
+
     def on_button_press_event(self, widget, event):
         """Event handler for button presses. The handler must decide which
-        mouse button was clicked and forward the invocation to leftMouse() or
-        rightMouse()."""
-        # TODO need some functionality here
-        print('Pressed Event! pos=' + str(self.pos))
-        print('Widget is ' + str(widget))
-        print('Event is ' + str(event))
-        print('Event button # is ' + str(event.get_button()))
+        mouse button was clicked. We are only interested in leftMouse clicks."""
+
+        # determine left- or right- click, feed the appropriate method. 
+        if event.get_button()[1] == 1: # left-mouse
+            updateImage(self.parent.parent.startImage, 'Click', TOOL_SIZE)
+        else:
+            print('Event button # is ' + str(event.get_button())
+                  + '... not handled')
 
 
     def on_button_release_event(self, widget, event):
         """Event handler for button releases. The handler must decide which
-        mouse button was clicked. We are only interested in leftMouse clicks."""
-        # TODO need some functionality here
-        print('Released Event! pos=' + str(self.pos))
-        print('Widget is ' + str(widget))
-        print('Event is ' + str(event))
-        print('Event button # is ' + str(event.get_button()))
+        mouse button was clicked. The invocation is forwarded to leftMouse() or
+        rightMouse()."""
+
+        # determine left- or right- click, feed the appropriate method.
+        if event.get_button()[1] == 1: # left-mouse
+            self.leftMouse(widget)
+        elif event.get_button()[1] == 3: # right-mouse
+            self.rightMouse()
+        else:
+            print('Mouse button ' + str(event.get_button())
+                  + ' not handled')
 
 
     def leftMouse(self, widget):
         """Left-Mouse handler. We use this to clear the area."""
 
         # exclusions
+        if not self.get_sensitive(): return False
         if self.exposed: return False
         if self.flagged: return False
 
@@ -204,46 +170,54 @@ class GridButton(Gtk.Button):
 
         # end game - we hit a mine - lose
         if self.mined:
-            self.imageKey = 'Explosion' # lose
-#            # TODO cleardown mode - not working - threading problem?
-#            if self.master.exploded:
-#                self.imageKey = 'UXB'
+            # change toggle state, prevent the button from being clicked again
+            self.set_sensitive(False)
 
-            self.setImage()
             self.exploded = True
-            self.master.exploded = True
+
+            # choose the image
+            if self.parent.exploded: # cleardown mode
+                self.imageKey = 'Quit'
+            else: # normal mode
+                self.set_active(True)
+                self.imageKey = 'Explosion' # lose
+                self.parent.exploded = True # notify end-game
+
+            updateImage(self.image, self.imageKey, self.getSize())
 
         else: # expose the button, display the number of neighbour mines
             self.expose(self)
 
             # propagate exposure to the neighbours if mines = flags
-            if self.neighbourFlags == self.neighbourMines.get():
+            if self.neighbourFlags == self.neighbourMines:
                 for neighbour in self.neighbourList:
 
                     exposedNeighbours += neighbour.leftMouse(widget)
 
-            # TODO reset the start button image
-            self._root().gameWindow.toolbar.setImage(
-                self._root().gameWindow.toolbar.startButton, 'Start')
+            # reset the start button image
+            updateImage(self.parent.parent.startImage, 'Start', TOOL_SIZE)
 
         # update count of exposed buttons - potential win end game
         exposedNeighbours += 1 # add self to the count
         if widget == self:
-            self.master.incrementExposedCount(exposedNeighbours)
+            self.parent.incrementExposedCount(exposedNeighbours)
         else: return exposedNeighbours
 
 
     def expose(self, widget):
         """Reveal the number of neighbour mines for this button."""
 
-        # disable the button and change its colour once it has been clicked
+        # disable the button and change its colour once it has been left-clicked
+        self.set_sensitive(False)
+        if not self.parent.exploded: self.set_active(True)
         self.exposed = True
-        self.setFont()
 
         self.imageKey = 'Empty'
-        self.setImage()
-        if self.neighbourMines.get() > 0:
-            self['compound'] = 'center'
+        if self.neighbourMines > 0:
+            self.imageKey = str(self.neighbourMines)
+
+        # update the image
+        updateImage(self.image, self.imageKey, self.getSize())
 
         # this is for when invoked by the game grid when giving hints
         if widget != self:
@@ -253,17 +227,22 @@ class GridButton(Gtk.Button):
     def rightMouse(self):
         """Right-Mouse handler. We use this to toggle mine flags."""
 
+        # action exclusions
+        if not self.get_sensitive(): return
         if self.exposed: return
 
-        if self.flagged:
-            self.imageKey = 'Empty'
-            self.setImage()
-        else:
-            self.imageKey = 'Flag'
-            self.setImage()
+        # toggle the flag state
         self.flagged = not self.flagged
+        self.set_active(self.flagged)
+
+        # update the button image
+        if self.flagged:
+            self.imageKey = 'Flag'
+        else:
+            self.imageKey = 'Empty'
+        updateImage(self.image, self.imageKey, self.getSize())
 
         # notify neighbours and parent of the change
-        self.master.updateFlags(self.flagged)
+        self.parent.updateFlags(self.flagged)
         for neighbour in self.neighbourList:
             neighbour.updateNeighbourFlags(self.flagged)

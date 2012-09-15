@@ -15,33 +15,20 @@
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
 import os
-from constants import UI_GRAPHICS_PATH
-
-
-# link the tokens used in-game with actual files used
-imageName = {'Empty': 'Empty.gif',              # \/ grid cell images \/
-             'Flag': 'Flag.gif',
-             'Explosion': 'Explosion.gif',      # /\ grid cell images /\
-             'Quit': 'UXB.gif',                  # quit button
-             'Win': 'VeryHappy.gif',            # \/ control button images \/
-             'Lose': 'Confused.gif',
-             'Start': 'Smile.gif',
-             'Click': 'OMG.gif',
-             'Hint': 'Unsure.gif',              # /\ control button images /\
-             }
+from constants import UI_GRAPHICS_PATH, IMAGE_NAMES
 
 
 # initialize the image cache data structure
-imageCache = dict.fromkeys(imageName)
+imageCache = dict.fromkeys(IMAGE_NAMES)
 
 
 def initializeImages():
     """Initialize the cache of pixbufs."""
 
-    for name in imageName.keys():
-        print('Caching '+name+'...')
-        file = os.path.join(UI_GRAPHICS_PATH, imageName[name])
-        imageCache[name] = GdkPixbuf.Pixbuf().new_from_file(file)
+    for key in imageCache.keys():
+        file = os.path.join(UI_GRAPHICS_PATH, IMAGE_NAMES[key])
+        print('Caching ' + key + ' from file ' + file + '...')
+        imageCache[key] = GdkPixbuf.Pixbuf().new_from_file(file)
         
 
 def getImage(name):

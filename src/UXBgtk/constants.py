@@ -25,8 +25,38 @@ import os
 
 # define the resource paths
 UI_BUILD_FILE = os.path.join(os.getcwd(), 'UXBgtk.glade')
-UI_GRAPHICS_PATH = os.path.join(os.getcwd(), 'images', '100')
+UI_CSS_FILE = os.path.join(os.getcwd(), 'UXBgtk.css')
+UI_GRAPHICS_PATH = os.path.join(os.getcwd(), 'images')
 
 # define initial button sizes
 TOOL_BUTTON_SIZE = 50
+TOOL_SIZE = (TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE)
 GRID_BUTTON_SIZE = 20
+GRID_SIZE = (GRID_BUTTON_SIZE, GRID_BUTTON_SIZE)
+
+# dictionary of image file names and the tokens used in-game
+IMAGE_NAMES = {
+               # grid cell non-number images
+               'Empty': 'Empty.gif',
+               'Flag': 'Flag.gif',
+               'Explosion': 'Explosion.gif',
+
+               # toolbar smiley button images
+               'Quit': 'UXB.gif',
+               'Win': 'VeryHappy.gif',
+               'Lose': 'Confused.gif',
+               'Start': 'Smile.gif',
+               'Click': 'OMG.gif',
+               'Hint': 'Unsure.gif',
+
+               # the numbers
+               '1': '1.gif',
+               '2': '2.gif',
+               '3': '3.gif',
+               '4': '4.gif',
+               '5': '5.gif',
+               '6': '6.gif',
+               '7': '7.gif',
+               '8': '8.gif',
+               }
+
