@@ -14,10 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
+import time
 from gi.repository import Gtk, Gdk
 from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE
 from getImage import initializeImages, getImage, updateImage
 from gridWindow import GridWindow
+import sys
 
 
 def getAllocatedSize(allocation):
@@ -95,8 +97,8 @@ class UXBgtk:
         self.flagCount.set_text('0')
         self.flagLabel.set_text('/ ' + str(nMines))
 
-        # destroy the old game if it exists
-        if self.gameGrid: self.gameGrid.destroy()
+        # destroy any pre-existing game
+        if self.gameGrid != None: self.gameGrid.destroy()
 
         # make the new game
         self.gameGrid = GridWindow(parent=self,
@@ -112,31 +114,45 @@ class UXBgtk:
     def on_window_destroy(self, widget):
         """Handler for closing window."""
 
-        print('Destroying Window...')
         Gtk.main_quit()
 
 
     def on_startButton_clicked(self, widget):
         """Handler for the start button."""
 
-        # TODO need some functionality here
-        print('Start Button Clicked')
         self.start()
 
 
     def on_hintButton_clicked(self, widget):
         """Handler for the hint button."""
 
-        # TODO need some functionality here
-        print('Hint Button Clicked')
         self.gameGrid.giveHint()
 
 
     def on_quitButton_clicked(self, widget):
         """Handler for the quit button."""
 
-        # TODO need some functionality here
-        print('Quit Button Clicked')
+        # obtain the size of the playing area
+        size = (self.gridContainer.get_allocated_width(),
+                self.gridContainer.get_allocated_height())
+
+        # get rid of the old game
+        if self.gameGrid != None: self.gameGrid.destroy()
+
+        # flash up an image
+        image = getImage('Explosion')
+        updateImage(image, 'Explosion', size)
+        self.gridContainer.add_with_viewport(image)
+        self.window.show_all()
+
+        # wait a short time without blocking the Gtk event loop...
+        for milliseconds in range(3000):
+            while Gtk.events_pending():
+                Gtk.main_iteration()
+            time.sleep(.001)
+
+        # ...now kill the app
+        self.window.destroy()
 
 
     def on_window_check_resize(self, widget):
@@ -151,6 +167,7 @@ class UXBgtk:
               + str(allocation.width) + ',' + str(allocation.height) + ')')
 
         self.gameGrid.resize(allocation)
+
 
 # load the image pixbuf cache
 initializeImages()

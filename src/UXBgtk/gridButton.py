@@ -51,7 +51,7 @@ class GridButton(Gtk.ToggleButton):
         # is this button flagged? - initialize to False
         self.flagged = False
 
-        # TODO initialize the mine count to zero
+        # initialize the mine count to zero
         self.neighbourMines = 0
 
         # initialize the neighbour flag count to zero
@@ -65,18 +65,6 @@ class GridButton(Gtk.ToggleButton):
         self.image = getImage(self.imageKey)
         self.add(self.image)
         updateImage(self.image, self.imageKey, GRID_SIZE)
-
-        # TODO convert from ttk: initialize the font key to 10 pixels (half image size).
-#        self.fontKey = '.'.join([str(self.imageSize // 2), 'TButton'])
-
-#        # TODO these are the TK bindings: set up the event bindings
-#        self.bind('<ButtonRelease-1>', self.leftMouse)  # Left-Mouse
-#        self.bind('<ButtonRelease-3>', self.rightMouse) # Right-Mouse
-#        self.bind('<ButtonPress-1>',
-#                  lambda event, \
-#                         button=self._root().gameWindow.toolbar.startButton, \
-#                         key='Click':\
-#                         self._root().gameWindow.toolbar.setImage(button, key))
 
         # set up the GTK event handlers
         self.connect("button_press_event", self.on_button_press_event)
