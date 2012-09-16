@@ -161,8 +161,7 @@ class GridButton(Gtk.ToggleButton):
     def leftMouse(self, widget):
         """Left-Mouse handler. We use this to clear the area."""
 
-        # exclusions
-        if not self.get_sensitive(): return False
+        # action exclusions
         if self.get_active(): return False
         if self.exposed: return False
         if self.flagged: return False
