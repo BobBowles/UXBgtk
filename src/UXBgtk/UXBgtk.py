@@ -16,10 +16,9 @@
 import random
 import time
 from gi.repository import Gtk, Gdk
-from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE
+from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE, BUTTON_PAD
 from getImage import initializeImages, getImage, updateImage
 from gridWindow import GridWindow
-import sys
 
 
 def getAllocatedSize(allocation):
@@ -67,13 +66,32 @@ class UXBgtk:
         self.flagCount = self.builder.get_object('flagCount')
         self.flagLabel = self.builder.get_object('flagLabel')
 
-        # TODO the game grid
+        # the game grid (blank for now)
         self.gridContainer = self.builder.get_object('gridContainer')
         self.gameGrid = None
+        self.imageSize = None
+        self.initializeGeometry()
+
+        # get references to the toolbar and status bar for size data.
+        self.toolbar = self.builder.get_object('toolBox')
+        self.statusbar = self.builder.get_object('statusBox')
 
         # get a reference to the main window itself and display the window
+        self.resize = True # resizing toggle
         self.window = self.builder.get_object('window')
         self.window.show_all()
+
+
+    def initializeGeometry(self):
+        """Initialize the geometry hints for the main window."""
+
+        self.geometry = Gdk.Geometry()
+        self.geometry.base_height = -1
+        self.geometry.base_width = -1
+        self.geometry.min_height = -1
+        self.geometry.min_width = -1
+        self.geometry.min_aspect = 1.0
+        self.geometry.max_aspect = 1.0
 
 
     def start(self):
@@ -84,8 +102,7 @@ class UXBgtk:
 
         # get the grid information from the configuration box.
         activeConfiguration = self.configurationBox.get_active_iter()
-        order, display, cols, rows, nMines = \
-            tuple(self.configurations[activeConfiguration])
+        cols, rows, nMines = tuple(self.configurations[activeConfiguration])[2:]
 
         mines = [True] * nMines
         mines.extend([False] * (cols * rows - nMines))
@@ -104,6 +121,14 @@ class UXBgtk:
         self.gameGrid = GridWindow(parent=self,
                                    cols=cols, rows=rows, mines=mines)
         self.gridContainer.add_with_viewport(self.gameGrid)
+
+        # impose geometry constraints on the window depending on cols and rows
+        print('Imposing aspect ratio ' + str(cols / rows))
+        self.geometry.min_aspect = cols / rows
+        self.geometry.max_aspect = cols / rows
+        self.window.set_geometry_hints(self.gridContainer,
+                                       self.geometry,
+                                       Gdk.WindowHints.ASPECT)
 
         # start the game
         self.hintButton.set_sensitive(True)
@@ -146,7 +171,7 @@ class UXBgtk:
         self.window.show_all()
 
         # wait a short time without blocking the Gtk event loop...
-        for milliseconds in range(3000):
+        for milliseconds in range(2000):
             while Gtk.events_pending():
                 Gtk.main_iteration()
             time.sleep(.001)
@@ -155,18 +180,72 @@ class UXBgtk:
         self.window.destroy()
 
 
+    def on_configurationBox_changed(self, widget):
+        """Reset stuff that needs to be reset for creating the game grid."""
+
+        self.imageSize = None
+#
+#
+#    def resizeWindow(self): # TODO maybe don't need this...
+#        """Make the window conform to square button geometry."""
+#
+#        newWidth = (self.imageSize + BUTTON_PAD) * self.gameGrid.cols
+#        newHeight = (self.imageSize + BUTTON_PAD) * self.gameGrid.rows
+#
+#        newWinWidth = newWidth
+#        newWinHeight = newHeight + 80
+##        \
+##                       + self.toolbar.get_allocated_height() \
+##                       + self.statusbar.get_allocated_height()
+#        newWinSize = newWinWidth, newWinHeight
+#        requestedSize = self.window.get_size_request()
+#
+#        # handle expansion and contraction differently...
+#        if requestedSize[0] > newWinWidth or requestedSize[1] > newWinHeight:
+#            print('New Win size is BIGGER:  ' + str(newWinSize))
+#            self.window.resize(newWinWidth, newWinHeight)
+#        else:
+#            print('New Win size is SMALLER: ' + str(newWinSize))
+#            self.window.set_default_size(newWinWidth, newWinHeight)
+#
+#
+#    def resizeGame(self, allocation): # TODO maybe don't need this
+#        """Implement resizing of the window and grid on request. The allocation
+#        has already been tested for the correct square button geometry."""
+#
+#        # resize the game grid...
+#        print('New allocation            ('
+#              + str(allocation.width) + ',' + str(allocation.height) + ')')
+#        self.gameGrid.set_allocation(allocation)
+#
+#        # ...and then the buttons and images
+#        print('Images size requested is ' + str(self.imageSize))
+#        self.gameGrid.resizeButtons(self.imageSize)
+
+
     def on_window_check_resize(self, widget):
-        """Handler for resizing the game grid images."""
+        """Handler for resizing the game grid images. """
 
         # do nothing if the game grid is not ready
         if not self.gameGrid: return
 
         # work out the container's allocation
         allocation = self.gridContainer.get_allocation()
-        print('Scrolled Window allocated ('
-              + str(allocation.width) + ',' + str(allocation.height) + ')')
 
-        self.gameGrid.resize(allocation)
+        # try to make the allocation fit the rows and columns of the grid
+        imageWidth = allocation.width // self.gameGrid.cols - BUTTON_PAD
+        imageHeight = allocation.height // self.gameGrid.rows - BUTTON_PAD
+
+        # use the mean of the test sizes
+        self.imageSize = (imageWidth, imageHeight)
+
+#        print('New allocation            ('
+#              + str(allocation.width) + ',' + str(allocation.height) + ')')
+        self.gameGrid.set_allocation(allocation)
+
+        # ...and then the buttons and images
+#        print('Images size requested is ' + str(self.imageSize))
+        self.gameGrid.resizeButtons(self.imageSize)
 
 
 # load the image pixbuf cache

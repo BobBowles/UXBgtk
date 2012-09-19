@@ -31,8 +31,9 @@ UI_GRAPHICS_PATH = os.path.join(os.getcwd(), 'images')
 # define initial button sizes
 TOOL_BUTTON_SIZE = 50
 TOOL_SIZE = (TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE)
-GRID_BUTTON_SIZE = 20
-GRID_SIZE = (GRID_BUTTON_SIZE, GRID_BUTTON_SIZE)
+GRID_INITIAL_SIZE = 20
+BUTTON_PAD = 10
+GRID_SIZE = (GRID_INITIAL_SIZE, GRID_INITIAL_SIZE)
 
 # dictionary of image file names and the tokens used in-game
 IMAGE_NAMES = {

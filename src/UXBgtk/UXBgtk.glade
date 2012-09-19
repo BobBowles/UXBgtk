@@ -56,7 +56,7 @@
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkBox" id="toolBox">
-            <property name="height_request">30</property>
+            <property name="height_request">60</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="valign">start</property>
@@ -114,6 +114,7 @@
                 <property name="entry_text_column">1</property>
                 <property name="id_column">1</property>
                 <property name="active_id">8*8 - 10 UXB</property>
+                <signal name="changed" handler="on_configurationBox_changed" swapped="no"/>
                 <child internal-child="entry">
                   <object class="GtkEntry" id="combobox-entry">
                     <property name="can_focus">False</property>
@@ -175,6 +176,7 @@
         </child>
         <child>
           <object class="GtkBox" id="statusBox">
+            <property name="height_request">20</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>

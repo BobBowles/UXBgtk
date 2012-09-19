@@ -178,26 +178,51 @@ class GridWindow(Gtk.Frame):
                     # left-click the button
                     button.leftMouse(button)
                     return
+#
+#
+#    def resize(self, allocation): # TODO DEPRECATED
+#        """Defines the resize behaviour of the button grid."""
+#
+#        # work out the best size for the grid buttons
+#        gridWidth = allocation.width
+#        gridHeight = allocation.height
+#
+#        buttonWidth = gridWidth // self.cols - 10
+#        buttonHeight = gridHeight // self.rows - 10
+#
+#        # TODO see if we can make the buttons square
+#        buttonSize = max(buttonWidth, buttonHeight)
+#
+#        # work out the new allocation
+#        newWidth = (buttonSize + 10) * self.cols
+#        newHeight = (buttonSize + 10) * self.rows
+#
+#        # set the allocation
+#        print('Current allocation=(' + str(self.get_allocated_width())
+#              + ',' + str(self.get_allocated_height()) + ')')
+#        print('New     allocation=(' + str(allocation.width)
+#              + ',' + str(allocation.height) + ')')
+#
+#        allocation.width = newWidth
+#        allocation.height = newHeight
+#        print('Squared allocation=(' + str(allocation.width)
+#              + ',' + str(allocation.height) + ')')
+#
+#        # now tell the buttons to sort themselves out
+#        for button in self.btnLookup.values():
+#            button.resize((buttonWidth, buttonHeight))
+#
+#
+#    def resizeImages(self, imageSize): # TODO DEPRECATED
+#        """Resize the images to match the button sizes."""
+#
+#        for button in self.btnLookup.values():
+#            button.resizeImage(imageSize)
 
 
-    def resize(self, allocation):
-        """Defines the resize behaviour of the button grid."""
+    def resizeButtons(self, imageSize):
+        """Resize the buttons and their images to match the chosen size."""
 
-        # work out the best size for the grid buttons
-        gridWidth = allocation.width
-        gridHeight = allocation.height
-
-        buttonWidth = gridWidth // self.cols - 10
-        buttonHeight = gridHeight // self.rows - 10
-
-        # set the allocation
-        print('Current allocation=(' + str(self.get_allocated_width())
-              + ',' + str(self.get_allocated_height()) + ')')
-        print('New     allocation=(' + str(allocation.width)
-              + ',' + str(allocation.height) + ')')
-        self.set_allocation(allocation)
-
-        # now tell the buttons to sort themselves out
         for button in self.btnLookup.values():
-            button.resize((buttonWidth, buttonHeight))
+            button.resize(imageSize)
 

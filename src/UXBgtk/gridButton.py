@@ -15,7 +15,7 @@
 
 from gi.repository import Gtk
 from getImage import getImage, updateImage
-from constants import TOOL_SIZE, GRID_SIZE
+from constants import TOOL_SIZE, GRID_SIZE, BUTTON_PAD
 
 
 # grid direction vectors (8 points of the compass)
@@ -62,9 +62,13 @@ class GridButton(Gtk.ToggleButton):
 
         # initialize the image to empty at 20 pixels
         self.imageKey = 'Empty'
+        if self.parent.parent.imageSize:
+            self.imageSize = self.parent.parent.imageSize
+        else:
+            self.imageSize = GRID_SIZE
         self.image = getImage(self.imageKey)
         self.add(self.image)
-        updateImage(self.image, self.imageKey, GRID_SIZE)
+        updateImage(self.image, self.imageKey, self.imageSize)
 
         # set up the GTK event handlers
         self.connect("button_press_event", self.on_button_press_event)
@@ -97,26 +101,51 @@ class GridButton(Gtk.ToggleButton):
 
         if increment: self.neighbourFlags += 1
         else: self.neighbourFlags -= 1
+#
+#
+#    def resizeImage(self, imageSize): # TODO DEPRECATED
+#        """Resize the grid button's child (image or text) to match the current
+#        window size. (The button looks after itself.)"""
+#
+#        # TODO something goes in here to replace setStyle, setFont, setImage.
+##        allocation = self.get_allocation()
+##        allocation.width = imageSize + BUTTON_PAD
+##        allocation.height = imageSize + BUTTON_PAD
+##        self.set_allocation(allocation)
+#
+#        if self.imageSize == imageSize:
+#            pass
+#        else:
+#            self.imageSize = imageSize
+#            updateImage(self.image, self.imageKey, self.imageSize)
 
 
-    def resize(self, size):
+    def resize(self, imageSize):
         """Resize the grid button's child (image or text) to match the current
         window size. (The button looks after itself.)"""
 
-        # TODO something goes in here to replace setStyle, setFont, setImage.
-        allocation = self.get_allocation()
-        allocation.width = size[0]
-        allocation.height = size[1]
-        self.set_allocation(allocation)
+        if self.imageSize == imageSize: # save some cpu cycles
+            return
 
-        updateImage(self.image, self.imageKey, size)
+        else:
+            self.imageSize = imageSize
+
+#            # resize the button
+#            allocation = self.get_allocation()
+#            allocation.width = imageSize[0] + BUTTON_PAD
+#            allocation.height = imageSize[1] + BUTTON_PAD
+#            self.set_allocation(allocation)
+
+            # resize the image
+            updateImage(self.image, self.imageKey, self.imageSize)
 
 
-    def getSize(self):
+    def getSize(self): # TODO maybe don't need this
         """Utility to get the button's allocated size as an (x, y) tuple.
         Returns (x, y)."""
 
-        return self.get_allocated_width(), self.get_allocated_height()
+#        return self.get_allocated_width(), self.get_allocated_height()
+        return self.imageSize, self.imageSize
 
 
     def on_button_press_event(self, widget, event):
@@ -171,7 +200,7 @@ class GridButton(Gtk.ToggleButton):
                 self.imageKey = 'Explosion' # lose
                 self.parent.exploded = True # notify end-game
 
-            updateImage(self.image, self.imageKey, self.getSize())
+            updateImage(self.image, self.imageKey, self.imageSize)
 
         else: # expose the button, display the number of neighbour mines
             self.expose(self)
@@ -205,7 +234,7 @@ class GridButton(Gtk.ToggleButton):
             self.imageKey = str(self.neighbourMines)
 
         # update the image
-        updateImage(self.image, self.imageKey, self.getSize())
+        updateImage(self.image, self.imageKey, self.imageSize)
 
         # this is for when invoked by the game grid when giving hints
         if widget != self:
@@ -228,7 +257,7 @@ class GridButton(Gtk.ToggleButton):
             self.imageKey = 'Flag'
         else:
             self.imageKey = 'Empty'
-        updateImage(self.image, self.imageKey, self.getSize())
+        updateImage(self.image, self.imageKey, self.imageSize)
 
         # notify neighbours and parent of the change
         self.parent.updateFlags(self.flagged)
