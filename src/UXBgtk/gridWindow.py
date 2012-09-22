@@ -62,11 +62,19 @@ class GridWindow(Gtk.Frame):
 #            self.yAxis.append(col)
 #            self.xAxis.pack_start(col, True, True, 0)
 
+        # try to fix the aspect ratio of the grid by using an AspectFrame
+        self.frame = Gtk.AspectFrame(label=None,
+                                     xalign=0.5,
+                                     yalign=0.5,
+                                     ratio=self.cols / self.rows,
+                                     obey_child=False)
+        self.add(self.frame)
+
         # define the grid for the game
         self.grid = Gtk.Grid()
         self.grid.set_column_homogeneous(True)
         self.grid.set_row_homogeneous(True)
-        self.add(self.grid)
+        self.frame.add(self.grid)
 
         self.createWidgets()
 

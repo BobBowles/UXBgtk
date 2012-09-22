@@ -70,7 +70,6 @@ class UXBgtk:
         self.gridContainer = self.builder.get_object('gridContainer')
         self.gameGrid = None
         self.imageSize = None
-        self.initializeGeometry()
 
         # get references to the toolbar and status bar for size data.
         self.toolbar = self.builder.get_object('toolBox')
@@ -80,19 +79,6 @@ class UXBgtk:
         self.resize = True # resizing toggle
         self.window = self.builder.get_object('window')
         self.window.show_all()
-
-
-    def initializeGeometry(self):
-        """Initialize the geometry hints for the main window."""
-
-        # TODO: this does not seem to work in the expected way.
-        self.geometry = Gdk.Geometry()
-        self.geometry.base_height = -1
-        self.geometry.base_width = -1
-        self.geometry.min_height = -1
-        self.geometry.min_width = -1
-        self.geometry.min_aspect = 1.0
-        self.geometry.max_aspect = 1.0
 
 
     def start(self):
@@ -122,15 +108,6 @@ class UXBgtk:
         self.gameGrid = GridWindow(parent=self,
                                    cols=cols, rows=rows, mines=mines)
         self.gridContainer.add_with_viewport(self.gameGrid)
-
-        # TODO: aspect ratio does not seem to be applied to the geometry widget
-        # impose geometry constraints on the window depending on cols and rows
-        print('Imposing aspect ratio ' + str(cols / rows))
-        self.geometry.min_aspect = cols / rows
-        self.geometry.max_aspect = cols / rows
-        self.window.set_geometry_hints(self.gridContainer,
-                                       self.geometry,
-                                       Gdk.WindowHints.ASPECT)
 
         # start the game
         self.hintButton.set_sensitive(True)
