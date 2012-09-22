@@ -46,45 +46,55 @@ class GridWindow(Gtk.Frame):
         # the number of flags in use
         self.flags = 0
 
+        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # we need this to keep track of the buttons
         self.btnLookup = dict()
+#        self.buttons = list()
 
-        # the x-axis
-        self.xAxis = Gtk.HBox()
-        self.add(self.xAxis)
+#        # the x-axis
+#        self.xAxis = Gtk.HBox()
+#        self.add(self.xAxis)
+#
+#        # the y-axes
+#        self.yAxis = list()
+#        for x in range(self.cols):
+#            col = Gtk.VBox()
+#            self.yAxis.append(col)
+#            self.xAxis.pack_start(col, True, True, 0)
 
-        # the y-axes
-        self.yAxis = list()
-        for x in range(self.cols):
-            col = Gtk.VBox()
-            self.yAxis.append(col)
-            self.xAxis.pack_start(col, True, True, 0)
+        # define the grid for the game
+        self.grid = Gtk.Grid()
+        self.grid.set_column_homogeneous(True)
+        self.grid.set_row_homogeneous(True)
+        self.add(self.grid)
 
         self.createWidgets()
 
 
     def createWidgets(self):
         """Make up the grid of buttons for the game."""
-        for x in range(self.cols):
-            col = self.yAxis[x]
 
+        for x in range(self.cols):
             for y in range(self.rows):
 
                 # grid button
                 button = GridButton(parent=self,
                                     pos=(x, y),
                                     mined=self.mines.pop())
-                col.pack_start(button, True, True, 0)
+                self.grid.attach(button, x, y, 1, 1)
 
-                # add to the dictionary
+                # TODO: Grid.get_child_at(x, y) needs gtk 3.2. use dict for now
                 self.btnLookup[(x, y)] = button
+#                self.buttons.append(button)
 
 
     def start(self):
         """Prepare the grid before the player starts pressing buttons..."""
 
+        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # work out the neighbour bomb counts for this game
         for pos, button in self.btnLookup.items():
+#        for button in self.buttons:
             button.updateNeighbourMines()
 
 
@@ -130,8 +140,10 @@ class GridWindow(Gtk.Frame):
 
         self.gameOver = True # avoids recursion issues during cleardown
 
+        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # clear down the grid
         for button in self.btnLookup.values():
+#        for button in self.buttons:
             if button.exposed: continue
 
             elif button.flagged:
@@ -156,8 +168,11 @@ class GridWindow(Gtk.Frame):
     def giveHint(self):
         """Find an unplayed, unmined button near a played button and reveal it."""
 
+        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # get a randomised list of all the buttons
         buttons = list(self.btnLookup.values())
+#        buttons = list().extend(self.buttons)
+
         random.shuffle(buttons)
 
         # find an unplayed, unmined button
@@ -223,6 +238,8 @@ class GridWindow(Gtk.Frame):
     def resizeButtons(self, imageSize):
         """Resize the buttons and their images to match the chosen size."""
 
+        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         for button in self.btnLookup.values():
+#        for button in self.buttons:
             button.resize(imageSize)
 

@@ -85,6 +85,7 @@ class UXBgtk:
     def initializeGeometry(self):
         """Initialize the geometry hints for the main window."""
 
+        # TODO: this does not seem to work in the expected way.
         self.geometry = Gdk.Geometry()
         self.geometry.base_height = -1
         self.geometry.base_width = -1
@@ -122,6 +123,7 @@ class UXBgtk:
                                    cols=cols, rows=rows, mines=mines)
         self.gridContainer.add_with_viewport(self.gameGrid)
 
+        # TODO: aspect ratio does not seem to be applied to the geometry widget
         # impose geometry constraints on the window depending on cols and rows
         print('Imposing aspect ratio ' + str(cols / rows))
         self.geometry.min_aspect = cols / rows
