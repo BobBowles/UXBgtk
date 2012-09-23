@@ -62,10 +62,10 @@ class GridButton(Gtk.ToggleButton):
 
         # initialize the image to empty at 20 pixels
         self.imageKey = 'Empty'
-        if self.parent.parent.imageSize:
-            self.imageSize = self.parent.parent.imageSize
-        else:
-            self.imageSize = GRID_SIZE
+#        if self.parent.parent.imageSize:
+#            self.imageSize = self.parent.parent.imageSize
+#        else:
+        self.imageSize = GRID_SIZE
         self.image = getImage(self.imageKey)
         self.add(self.image)
         updateImage(self.image, self.imageKey, self.imageSize)
@@ -121,6 +121,26 @@ class GridButton(Gtk.ToggleButton):
 #        else:
 #            self.imageSize = imageSize
 #            updateImage(self.image, self.imageKey, self.imageSize)
+#
+#
+#    def resize(self, imageSize): # TODO: DEPRECATED DONT NEED
+#        """Resize the grid button's child (image or text) to match the current
+#        window size. (The button looks after itself.)"""
+#
+#        if self.imageSize == imageSize: # save some cpu cycles
+#            return
+#
+#        else:
+#            self.imageSize = imageSize
+#
+##            # resize the button
+##            allocation = self.get_allocation()
+##            allocation.width = imageSize[0] + BUTTON_PAD
+##            allocation.height = imageSize[1] + BUTTON_PAD
+##            self.set_allocation(allocation)
+#
+#            # resize the image
+#            updateImage(self.image, self.imageKey, self.imageSize)
 
 
     def resize(self, imageSize):
@@ -132,23 +152,31 @@ class GridButton(Gtk.ToggleButton):
 
         else:
             self.imageSize = imageSize
-
-#            # resize the button
-#            allocation = self.get_allocation()
-#            allocation.width = imageSize[0] + BUTTON_PAD
-#            allocation.height = imageSize[1] + BUTTON_PAD
-#            self.set_allocation(allocation)
-
-            # resize the image
             updateImage(self.image, self.imageKey, self.imageSize)
-
-
-    def getSize(self): # TODO maybe don't need this
-        """Utility to get the button's allocated size as an (x, y) tuple.
-        Returns (x, y)."""
-
-#        return self.get_allocated_width(), self.get_allocated_height()
-        return self.imageSize, self.imageSize
+#
+#
+#    def resize(self): # NONONONOONONONON
+#        """Resize the grid button's image to match the button's current size.
+#        (The button looks after itself.)"""
+#
+#        newSize = self.getSize()
+#
+#        if newSize == self.imageSize: return
+#        else:
+#            self.imageSize = newSize
+#
+#            # resize the image
+#            updateImage(self.image, self.imageKey, self.imageSize)
+#
+#
+#    def getSize(self): # TODO maybe don't need this
+#        """Utility to get the images's size as an (x, y) tuple based on the
+#        allocated size of the button.
+#        Returns (x, y)."""
+#
+#        return self.get_allocated_width() - BUTTON_PAD, \
+#            self.get_allocated_height() - BUTTON_PAD
+##        return self.imageSize, self.imageSize
 
 
     def on_button_press_event(self, widget, event):
@@ -158,9 +186,9 @@ class GridButton(Gtk.ToggleButton):
         # determine left- or right- click, feed the appropriate method. 
         if event.get_button()[1] == 1: # left-mouse
             updateImage(self.parent.parent.startImage, 'Click', TOOL_SIZE)
-        else:
-            print('Event button # is ' + str(event.get_button())
-                  + '... not handled')
+#        else:
+#            print('Event button # is ' + str(event.get_button())
+#                  + '... not handled')
 
 
     def on_button_release_event(self, widget, event):
@@ -173,9 +201,9 @@ class GridButton(Gtk.ToggleButton):
             self.leftMouse(widget)
         elif event.get_button()[1] == 3: # right-mouse
             self.rightMouse()
-        else:
-            print('Mouse button ' + str(event.get_button())
-                  + ' not handled')
+#        else:
+#            print('Mouse button ' + str(event.get_button())
+#                  + ' not handled')
 
 
     def leftMouse(self, widget):
