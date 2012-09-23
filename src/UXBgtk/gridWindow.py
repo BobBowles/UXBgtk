@@ -211,10 +211,9 @@ class GridWindow(Gtk.Frame):
         gridWidth = allocation.width
         gridHeight = allocation.height
 
+        # choose the smaller dimension for scaling the images
         imageWidth = gridWidth // self.cols - 10
         imageHeight = gridHeight // self.rows - 10
-
-        # TODO see if we can make the buttons square
         imageSize = min(imageWidth, imageHeight)
 
         # work out the new allocation
@@ -222,15 +221,8 @@ class GridWindow(Gtk.Frame):
         newHeight = (imageSize + 10) * self.rows
 
         # set the allocation
-        print('Current allocation=(' + str(self.get_allocated_width())
-              + ',' + str(self.get_allocated_height()) + ')')
-        print('New     allocation=(' + str(allocation.width)
-              + ',' + str(allocation.height) + ')')
-
         allocation.width = newWidth
         allocation.height = newHeight
-        print('Squared allocation=(' + str(allocation.width)
-              + ',' + str(allocation.height) + ')')
 
         # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # now tell the buttons to sort themselves out

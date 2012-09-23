@@ -69,14 +69,13 @@ class UXBgtk:
         # the game grid (blank for now)
         self.gridContainer = self.builder.get_object('gridContainer')
         self.gameGrid = None
-        self.imageSize = None
+        self.previousAllocation = self.gridContainer.get_allocation()
 
         # get references to the toolbar and status bar for size data.
         self.toolbar = self.builder.get_object('toolBox')
         self.statusbar = self.builder.get_object('statusBox')
 
         # get a reference to the main window itself and display the window
-        self.resize = True # resizing toggle
         self.window = self.builder.get_object('window')
         self.window.show_all()
 
@@ -162,7 +161,7 @@ class UXBgtk:
     def on_configurationBox_changed(self, widget):
         """Reset stuff that needs to be reset for creating the game grid."""
 
-        self.imageSize = None
+        pass
 
 
     def on_window_check_resize(self, widget):
@@ -170,11 +169,17 @@ class UXBgtk:
 
         # do nothing if the game grid is not ready
         if not self.gameGrid: return
-        print('Check resize started-----------------------------')
+
+        # TODO: try to limit the number of times this gets invoked
 
         allocation = self.gridContainer.get_allocation()
-        self.gameGrid.resize(allocation)
-        print('Check resize finished----------------------------')
+
+        # see if the allocation has changed
+        if allocation == self.previousAllocation:
+            return
+        else:
+            self.previousAllocation = allocation
+            self.gameGrid.resize(allocation)
 
 
 # load the image pixbuf cache

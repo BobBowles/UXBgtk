@@ -20,7 +20,8 @@ from constants import UI_GRAPHICS_PATH, IMAGE_NAMES
 
 # initialize the image cache data structure
 imageCache = dict.fromkeys(IMAGE_NAMES)
-
+scaledImageCache = dict.fromkeys(IMAGE_NAMES)
+currentSize = (0, 0)
 
 def initializeImages():
     """Initialize the cache of pixbufs."""
@@ -29,7 +30,7 @@ def initializeImages():
         file = os.path.join(UI_GRAPHICS_PATH, IMAGE_NAMES[key])
         print('Caching ' + key + ' from file ' + file + '...')
         imageCache[key] = GdkPixbuf.Pixbuf().new_from_file(file)
-        
+
 
 def getImage(name):
     """Obtain an image from a pre-cached pixbuf."""
@@ -38,12 +39,20 @@ def getImage(name):
 
 
 def updateImage(image, name, size):
-    """Update an image using the file database via an image name key. The image 
-    is sized according to the size tuple."""
-    
-    x = size[0]
-    y = size[1]
-    #print('Scaling image ' + name + ' to (' + str(x) + ',' + str(y) + ')')
-    pixbuf = imageCache[name].scale_simple(x, y,
-                                           GdkPixbuf.InterpType.BILINEAR)
+    """Update an image using the file database via an image name key. The image
+    is sized according to the size tuple. A cache is used to reduce the
+    computation of resized images."""
+
+    x, y = size
+
+    # update the cache if needed
+    if scaledImageCache[name] == None \
+       or scaledImageCache[name][0] != size:
+        scaledPixbuf = \
+            imageCache[name].scale_simple(x, y,
+                                          GdkPixbuf.InterpType.BILINEAR)
+        scaledImageCache[name] = (size, scaledPixbuf)
+
+    # get the pre-scaled image from the cache
+    pixbuf = scaledImageCache[name][1]
     image.set_from_pixbuf(pixbuf)
