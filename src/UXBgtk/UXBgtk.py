@@ -163,43 +163,6 @@ class UXBgtk:
         """Reset stuff that needs to be reset for creating the game grid."""
 
         self.imageSize = None
-#
-#
-#    def resizeWindow(self): # TODO maybe don't need this...
-#        """Make the window conform to square button geometry."""
-#
-#        newWidth = (self.imageSize + BUTTON_PAD) * self.gameGrid.cols
-#        newHeight = (self.imageSize + BUTTON_PAD) * self.gameGrid.rows
-#
-#        newWinWidth = newWidth
-#        newWinHeight = newHeight + 80
-##        \
-##                       + self.toolbar.get_allocated_height() \
-##                       + self.statusbar.get_allocated_height()
-#        newWinSize = newWinWidth, newWinHeight
-#        requestedSize = self.window.get_size_request()
-#
-#        # handle expansion and contraction differently...
-#        if requestedSize[0] > newWinWidth or requestedSize[1] > newWinHeight:
-#            print('New Win size is BIGGER:  ' + str(newWinSize))
-#            self.window.resize(newWinWidth, newWinHeight)
-#        else:
-#            print('New Win size is SMALLER: ' + str(newWinSize))
-#            self.window.set_default_size(newWinWidth, newWinHeight)
-#
-#
-#    def resizeGame(self, allocation): # TODO maybe don't need this
-#        """Implement resizing of the window and grid on request. The allocation
-#        has already been tested for the correct square button geometry."""
-#
-#        # resize the game grid...
-#        print('New allocation            ('
-#              + str(allocation.width) + ',' + str(allocation.height) + ')')
-#        self.gameGrid.set_allocation(allocation)
-#
-#        # ...and then the buttons and images
-#        print('Images size requested is ' + str(self.imageSize))
-#        self.gameGrid.resizeButtons(self.imageSize)
 
 
     def on_window_check_resize(self, widget):
@@ -207,41 +170,8 @@ class UXBgtk:
 
         # do nothing if the game grid is not ready
         if not self.gameGrid: return
-        print('Checking resize----------------------------------')
-#
-#        # work out the container's allocation
-#        allocation = self.gridContainer.get_allocation()
-#        print('Grid Container allocation ('
-#              + str(allocation.width) + ',' + str(allocation.height) + ')')
-#
-#        gridAllocation = self.gameGrid.get_allocation()
-#        print('Game Grid allocation      ('
-#              + str(gridAllocation.width) + ',' + str(gridAllocation.height) + ')')
-#
-#        aspectAllocation = self.gameGrid.frame.get_allocation()
-#        print('Aspect Frame allocation   ('
-#              + str(aspectAllocation.width) + ',' + str(aspectAllocation.height) + ')')
-#
-#        boxAllocation = self.gameGrid.grid.get_allocation()
-#        print('Button Grid allocation    ('
-#              + str(boxAllocation.width) + ',' + str(boxAllocation.height) + ')')
-#
-##        print('Changing grid allocation to container allocation....')
-##        self.gameGrid.set_allocation(allocation)
-#
-#        # try to make the allocation fit the rows and columns of the grid
-#        imageWidth = allocation.width // self.gameGrid.cols - BUTTON_PAD
-#        imageHeight = allocation.height // self.gameGrid.rows - BUTTON_PAD
-#        print('Image allocation        = ('
-#              + str(imageWidth) + ',' + str(imageHeight) + ')')
-#
-#        # TODO: need something here to make the right image size for the size of button
-#        # use the mean of the test sizes
-#        self.imageSize = (imageWidth, imageHeight)
-#
-#        # ...and then the buttons and images
-##        print('Images size requested is ' + str(self.imageSize))
-#        self.gameGrid.resizeButtons(self.imageSize)
+        print('Check resize started-----------------------------')
+
         allocation = self.gridContainer.get_allocation()
         self.gameGrid.resize(allocation)
         print('Check resize finished----------------------------')

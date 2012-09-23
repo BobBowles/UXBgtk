@@ -232,45 +232,8 @@ class GridWindow(Gtk.Frame):
         print('Squared allocation=(' + str(allocation.width)
               + ',' + str(allocation.height) + ')')
 
+        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # now tell the buttons to sort themselves out
         for button in self.btnLookup.values():
+#        for button in self.buttons:
             button.resize((imageSize, imageSize))
-#
-#
-#    def resizeImages(self, imageSize): # TODO DEPRECATED
-#        """Resize the images to match the button sizes."""
-#
-#        for button in self.btnLookup.values():
-#            button.resizeImage(imageSize)
-#
-#
-#    def resizeButtons(self, imageSize):
-#        """Resize the buttons and their images to match the chosen size."""
-#
-#        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
-#        for button in self.btnLookup.values():
-##        for button in self.buttons:
-#            button.resize(imageSize)
-#
-#    def resize(self):
-#        """Notify the buttons to resize their images."""
-#
-#        # work out what size the images should be - use the grid allocation?
-#        allocation = self.frame.get_allocation()
-#        print('Frame allocation          ('
-#              + str(allocation.width) + ',' + str(allocation.height) + ')')
-#
-#        gridAllocation = self.grid.get_allocation()
-#        print('Grid allocation           ('
-#              + str(gridAllocation.width) + ',' + str(gridAllocation.height) + ')')
-#
-#        imageWidth = allocation.width // self.cols - BUTTON_PAD
-#        imageHeight = allocation.height // self.rows - BUTTON_PAD
-#        print('Image allocation        = ('
-#              + str(imageWidth) + ',' + str(imageHeight) + ')')
-#
-#        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
-#        for button in self.btnLookup.values():
-##        for button in self.buttons:
-#            button.resize((imageWidth, imageHeight))
-

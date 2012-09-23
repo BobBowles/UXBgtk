@@ -104,43 +104,6 @@ class GridButton(Gtk.ToggleButton):
 
         if increment: self.neighbourFlags += 1
         else: self.neighbourFlags -= 1
-#
-#
-#    def resizeImage(self, imageSize): # TODO DEPRECATED
-#        """Resize the grid button's child (image or text) to match the current
-#        window size. (The button looks after itself.)"""
-#
-#        # TODO something goes in here to replace setStyle, setFont, setImage.
-##        allocation = self.get_allocation()
-##        allocation.width = imageSize + BUTTON_PAD
-##        allocation.height = imageSize + BUTTON_PAD
-##        self.set_allocation(allocation)
-#
-#        if self.imageSize == imageSize:
-#            pass
-#        else:
-#            self.imageSize = imageSize
-#            updateImage(self.image, self.imageKey, self.imageSize)
-#
-#
-#    def resize(self, imageSize): # TODO: DEPRECATED DONT NEED
-#        """Resize the grid button's child (image or text) to match the current
-#        window size. (The button looks after itself.)"""
-#
-#        if self.imageSize == imageSize: # save some cpu cycles
-#            return
-#
-#        else:
-#            self.imageSize = imageSize
-#
-##            # resize the button
-##            allocation = self.get_allocation()
-##            allocation.width = imageSize[0] + BUTTON_PAD
-##            allocation.height = imageSize[1] + BUTTON_PAD
-##            self.set_allocation(allocation)
-#
-#            # resize the image
-#            updateImage(self.image, self.imageKey, self.imageSize)
 
 
     def resize(self, imageSize):
@@ -153,30 +116,6 @@ class GridButton(Gtk.ToggleButton):
         else:
             self.imageSize = imageSize
             updateImage(self.image, self.imageKey, self.imageSize)
-#
-#
-#    def resize(self): # NONONONOONONONON
-#        """Resize the grid button's image to match the button's current size.
-#        (The button looks after itself.)"""
-#
-#        newSize = self.getSize()
-#
-#        if newSize == self.imageSize: return
-#        else:
-#            self.imageSize = newSize
-#
-#            # resize the image
-#            updateImage(self.image, self.imageKey, self.imageSize)
-#
-#
-#    def getSize(self): # TODO maybe don't need this
-#        """Utility to get the images's size as an (x, y) tuple based on the
-#        allocated size of the button.
-#        Returns (x, y)."""
-#
-#        return self.get_allocated_width() - BUTTON_PAD, \
-#            self.get_allocated_height() - BUTTON_PAD
-##        return self.imageSize, self.imageSize
 
 
     def on_button_press_event(self, widget, event):
