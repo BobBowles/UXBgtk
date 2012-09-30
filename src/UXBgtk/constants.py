@@ -42,13 +42,15 @@ IMAGE_NAMES = {
                'Flag': 'Flag.gif',
                'Explosion': 'Explosion.gif',
 
-               # toolbar smiley button images
+               # toolbar button images
                'Quit': 'UXB.gif',
                'Win': 'VeryHappy.gif',
                'Lose': 'Confused.gif',
                'Start': 'Smile.gif',
                'Click': 'OMG.gif',
                'Hint': 'Unsure.gif',
+               'PBC_Off': 'SquareNoLoop.gif',
+               'PBC_On': 'SquareLoop.gif',
 
                # the numbers
                '1': '1.gif',

@@ -39,22 +39,33 @@ class UXBgtk:
         self.builder.add_from_file(UI_BUILD_FILE)
         self.builder.connect_signals(self)
 
-        # these are the toolbar widgets
+        # these are the toolbar widgets...
+
+        # game start
         self.startButton = self.builder.get_object('startButton')
         self.startImage = getImage('Start')
         updateImage(self.startImage, 'Start', TOOL_SIZE)
         self.startButton.add(self.startImage)
 
+        # hint request
         self.hintButton = self.builder.get_object('hintButton')
         self.hintImage = getImage('Hint')
         updateImage(self.hintImage, 'Hint', TOOL_SIZE)
         self.hintButton.add(self.hintImage)
         self.hintButton.set_sensitive(False)
 
+        # periodic boundary condition toggle
+        self.pbcButton = self.builder.get_object('pbcButton')
+        self.pbcImage = getImage('PBC_Off')
+        updateImage(self.pbcImage, 'PBC_Off', TOOL_SIZE)
+        self.pbcButton.add(self.pbcImage)
+        self.pbcButton.set_sensitive(True)
+
         # the configurationBox and its model
         self.configurations = self.builder.get_object('configurations')
         self.configurationBox = self.builder.get_object('configurationBox')
 
+        # an alternative quit button
         self.quitButton = self.builder.get_object('quitButton')
         self.quitImage = getImage('Quit')
         updateImage(self.quitImage, 'Quit', TOOL_SIZE)
@@ -130,8 +141,11 @@ class UXBgtk:
                                        self.geometry,
                                        Gdk.WindowHints.ASPECT)
 
+        # configure the toolbar widgets sensitivity
+        self.hintButton.set_sensitive(True)     # enable hints during a game
+        self.pbcButton.set_sensitive(False)     # can't change pbc during a game
+
         # start the game
-        self.hintButton.set_sensitive(True)
         self.gameGrid.start()
         self.window.show_all()
 
@@ -152,6 +166,15 @@ class UXBgtk:
         """Handler for the hint button."""
 
         self.gameGrid.giveHint()
+
+
+    def on_pbcButton_toggled(self, widget):
+        """Handler for the periodic boundary condition button."""
+
+        if self.pbcButton.get_active():
+            updateImage(self.pbcImage, 'PBC_On', TOOL_SIZE)
+        else:
+            updateImage(self.pbcImage, 'PBC_Off', TOOL_SIZE)
 
 
     def on_quitButton_clicked(self, widget):
@@ -183,44 +206,7 @@ class UXBgtk:
     def on_configurationBox_changed(self, widget):
         """Reset stuff that needs to be reset for creating the game grid."""
 
-        self.imageSize = None
-#
-#
-#    def resizeWindow(self): # TODO maybe don't need this...
-#        """Make the window conform to square button geometry."""
-#
-#        newWidth = (self.imageSize + BUTTON_PAD) * self.gameGrid.cols
-#        newHeight = (self.imageSize + BUTTON_PAD) * self.gameGrid.rows
-#
-#        newWinWidth = newWidth
-#        newWinHeight = newHeight + 80
-##        \
-##                       + self.toolbar.get_allocated_height() \
-##                       + self.statusbar.get_allocated_height()
-#        newWinSize = newWinWidth, newWinHeight
-#        requestedSize = self.window.get_size_request()
-#
-#        # handle expansion and contraction differently...
-#        if requestedSize[0] > newWinWidth or requestedSize[1] > newWinHeight:
-#            print('New Win size is BIGGER:  ' + str(newWinSize))
-#            self.window.resize(newWinWidth, newWinHeight)
-#        else:
-#            print('New Win size is SMALLER: ' + str(newWinSize))
-#            self.window.set_default_size(newWinWidth, newWinHeight)
-#
-#
-#    def resizeGame(self, allocation): # TODO maybe don't need this
-#        """Implement resizing of the window and grid on request. The allocation
-#        has already been tested for the correct square button geometry."""
-#
-#        # resize the game grid...
-#        print('New allocation            ('
-#              + str(allocation.width) + ',' + str(allocation.height) + ')')
-#        self.gameGrid.set_allocation(allocation)
-#
-#        # ...and then the buttons and images
-#        print('Images size requested is ' + str(self.imageSize))
-#        self.gameGrid.resizeButtons(self.imageSize)
+        pass        # atm nothing needs to be changed here
 
 
     def on_window_check_resize(self, widget):
