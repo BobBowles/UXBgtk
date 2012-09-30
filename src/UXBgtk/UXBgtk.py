@@ -115,7 +115,7 @@ class UXBgtk:
 
 
     def on_window_destroy(self, widget):
-        """Handler for closing window."""
+        """Handler for closing window. A quick clean kill."""
 
         Gtk.main_quit()
 
@@ -133,7 +133,7 @@ class UXBgtk:
 
 
     def on_quitButton_clicked(self, widget):
-        """Handler for the quit button."""
+        """Handler for the quit button. A more theatrical death."""
 
         # obtain the size of the playing area
         size = (self.gridContainer.get_allocated_width(),
