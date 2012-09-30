@@ -77,13 +77,22 @@ class GridButton(Gtk.ToggleButton):
         only happens at the start of each game, but the cache of neighbours is
         used later."""
 
+        # decide if periodic boundaries are being applied
+        pbc = self.parent.parent.pbcButton.get_active()
+
         # initialize the list of neighbours
         self.neighbourList = []
         for dir in directions:
             x = self.pos[0] + dir[0]
             y = self.pos[1] + dir[1]
+
+            # grid boundary conditions
             if x < 0 or x >= self.parent.cols or \
-               y < 0 or y >= self.parent.rows: continue
+               y < 0 or y >= self.parent.rows:
+                if pbc:             # apply periodic constraints to grid numbers
+                    x = x % self.parent.cols
+                    y = y % self.parent.rows
+                else: continue      # no neighbours beyond grid edge
 
             neighbour = self.parent.grid.get_child_at(x, y)
             self.neighbourList.append(neighbour)

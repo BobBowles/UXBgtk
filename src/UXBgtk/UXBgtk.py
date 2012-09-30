@@ -39,22 +39,33 @@ class UXBgtk:
         self.builder.add_from_file(UI_BUILD_FILE)
         self.builder.connect_signals(self)
 
-        # these are the toolbar widgets
+        # these are the toolbar widgets...
+
+        # game start
         self.startButton = self.builder.get_object('startButton')
         self.startImage = getImage('Start')
         updateImage(self.startImage, 'Start', TOOL_SIZE)
         self.startButton.add(self.startImage)
 
+        # hint request
         self.hintButton = self.builder.get_object('hintButton')
         self.hintImage = getImage('Hint')
         updateImage(self.hintImage, 'Hint', TOOL_SIZE)
         self.hintButton.add(self.hintImage)
         self.hintButton.set_sensitive(False)
 
+        # periodic boundary condition toggle
+        self.pbcButton = self.builder.get_object('pbcButton')
+        self.pbcImage = getImage('PBC_Off')
+        updateImage(self.pbcImage, 'PBC_Off', TOOL_SIZE)
+        self.pbcButton.add(self.pbcImage)
+        self.pbcButton.set_sensitive(True)
+
         # the configurationBox and its model
         self.configurations = self.builder.get_object('configurations')
         self.configurationBox = self.builder.get_object('configurationBox')
 
+        # an alternative quit button
         self.quitButton = self.builder.get_object('quitButton')
         self.quitImage = getImage('Quit')
         updateImage(self.quitImage, 'Quit', TOOL_SIZE)
@@ -132,6 +143,15 @@ class UXBgtk:
         self.gameGrid.giveHint()
 
 
+    def on_pbcButton_toggled(self, widget):
+        """Handler for the periodic boundary condition button."""
+
+        if self.pbcButton.get_active():
+            updateImage(self.pbcImage, 'PBC_On', TOOL_SIZE)
+        else:
+            updateImage(self.pbcImage, 'PBC_Off', TOOL_SIZE)
+
+
     def on_quitButton_clicked(self, widget):
         """Handler for the quit button. A more theatrical death."""
 
@@ -161,7 +181,7 @@ class UXBgtk:
     def on_configurationBox_changed(self, widget):
         """Reset stuff that needs to be reset for creating the game grid."""
 
-        pass
+        pass        # atm nothing needs to be changed here
 
 
     def on_window_check_resize(self, widget):

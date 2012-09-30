@@ -129,6 +129,27 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToggleButton" id="pbcButton">
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">50</property>
+                <property name="height_request">50</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="yalign">0.50999999046325684</property>
+                <signal name="toggled" handler="on_pbcButton_toggled" swapped="no"/>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkButton" id="quitButton">
                 <property name="use_action_appearance">False</property>
                 <property name="width_request">50</property>
@@ -148,7 +169,7 @@
                 <property name="fill">True</property>
                 <property name="padding">5</property>
                 <property name="pack_type">end</property>
-                <property name="position">3</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>

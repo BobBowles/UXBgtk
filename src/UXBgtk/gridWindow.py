@@ -155,6 +155,10 @@ class GridWindow(Gtk.Frame):
         else:
             updateImage(self.parent.startImage, 'Lose', TOOL_SIZE)
 
+        # update the sensitivity of the other toolbar buttons
+        self.parent.hintButton.set_sensitive(False)
+        self.parent.pbcButton.set_sensitive(True)
+
 
     def giveHint(self):
         """Find an unplayed, unmined button near a played button and reveal it."""
