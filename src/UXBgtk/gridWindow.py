@@ -51,17 +51,6 @@ class GridWindow(Gtk.Frame):
 #        self.btnLookup = dict()
         self.buttons = list()
 
-#        # the x-axis
-#        self.xAxis = Gtk.HBox()
-#        self.add(self.xAxis)
-#
-#        # the y-axes
-#        self.yAxis = list()
-#        for x in range(self.cols):
-#            col = Gtk.VBox()
-#            self.yAxis.append(col)
-#            self.xAxis.pack_start(col, True, True, 0)
-
         # try to fix the aspect ratio of the grid by using an AspectFrame
         self.frame = Gtk.AspectFrame(label=None,
                                      xalign=0.5,
@@ -98,9 +87,7 @@ class GridWindow(Gtk.Frame):
     def start(self):
         """Prepare the grid before the player starts pressing buttons..."""
 
-        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # work out the neighbour bomb counts for this game
-#        for pos, button in self.btnLookup.items():
         for button in self.buttons:
             button.updateNeighbourMines()
 
@@ -147,9 +134,7 @@ class GridWindow(Gtk.Frame):
 
         self.gameOver = True # avoids recursion issues during cleardown
 
-        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # clear down the grid
-#        for button in self.btnLookup.values():
         for button in self.buttons:
             if button.exposed: continue
 
@@ -175,11 +160,8 @@ class GridWindow(Gtk.Frame):
     def giveHint(self):
         """Find an unplayed, unmined button near a played button and reveal it."""
 
-        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # get a randomised list of all the buttons
-#        buttons = list(self.btnLookup.values())
         buttons = self.buttons[:]
-
         random.shuffle(buttons)
 
         # find an unplayed, unmined button
@@ -223,8 +205,6 @@ class GridWindow(Gtk.Frame):
         allocation.width = newWidth
         allocation.height = newHeight
 
-        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # now tell the buttons to sort themselves out
-#        for button in self.btnLookup.values():
         for button in self.buttons:
             button.resize((imageSize, imageSize))
