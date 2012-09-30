@@ -48,7 +48,6 @@ class GridWindow(Gtk.Frame):
         self.flags = 0
 
         # a convenient way to keep a reference to all the buttons
-#        self.btnLookup = dict()
         self.buttons = list()
 
         # try to fix the aspect ratio of the grid by using an AspectFrame

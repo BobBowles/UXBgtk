@@ -62,9 +62,6 @@ class GridButton(Gtk.ToggleButton):
 
         # initialize the image to empty at 20 pixels
         self.imageKey = 'Empty'
-#        if self.parent.parent.imageSize:
-#            self.imageSize = self.parent.parent.imageSize
-#        else:
         self.imageSize = GRID_SIZE
         self.image = getImage(self.imageKey)
         self.add(self.image)
