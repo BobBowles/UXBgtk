@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk
+from GtkGridWorkaround import Grid    # TODO: remove after Ubuntu 12.10
 import random
 from gridButton import GridButton
 from getImage import updateImage
@@ -46,10 +47,9 @@ class GridWindow(Gtk.Frame):
         # the number of flags in use
         self.flags = 0
 
-        # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
-        # we need this to keep track of the buttons
-        self.btnLookup = dict()
-#        self.buttons = list()
+        # a convenient way to keep a reference to all the buttons
+#        self.btnLookup = dict()
+        self.buttons = list()
 
 #        # the x-axis
 #        self.xAxis = Gtk.HBox()
@@ -71,7 +71,9 @@ class GridWindow(Gtk.Frame):
         self.add(self.frame)
 
         # define the grid for the game
-        self.grid = Gtk.Grid()
+        # TODO: change constructor on upgrade to Ubuntu 12.10        
+#        self.grid = Gtk.Grid()
+        self.grid = Grid()
         self.grid.set_column_homogeneous(True)
         self.grid.set_row_homogeneous(True)
         self.frame.add(self.grid)
@@ -90,10 +92,7 @@ class GridWindow(Gtk.Frame):
                                     pos=(x, y),
                                     mined=self.mines.pop())
                 self.grid.attach(button, x, y, 1, 1)
-
-                # TODO: Grid.get_child_at(x, y) needs gtk 3.2. use dict for now
-                self.btnLookup[(x, y)] = button
-#                self.buttons.append(button)
+                self.buttons.append(button)
 
 
     def start(self):
@@ -101,8 +100,8 @@ class GridWindow(Gtk.Frame):
 
         # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # work out the neighbour bomb counts for this game
-        for pos, button in self.btnLookup.items():
-#        for button in self.buttons:
+#        for pos, button in self.btnLookup.items():
+        for button in self.buttons:
             button.updateNeighbourMines()
 
 
@@ -150,8 +149,8 @@ class GridWindow(Gtk.Frame):
 
         # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # clear down the grid
-        for button in self.btnLookup.values():
-#        for button in self.buttons:
+#        for button in self.btnLookup.values():
+        for button in self.buttons:
             if button.exposed: continue
 
             elif button.flagged:
@@ -178,8 +177,8 @@ class GridWindow(Gtk.Frame):
 
         # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # get a randomised list of all the buttons
-        buttons = list(self.btnLookup.values())
-#        buttons = list().extend(self.buttons)
+#        buttons = list(self.btnLookup.values())
+        buttons = self.buttons[:]
 
         random.shuffle(buttons)
 
@@ -226,6 +225,6 @@ class GridWindow(Gtk.Frame):
 
         # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
         # now tell the buttons to sort themselves out
-        for button in self.btnLookup.values():
-#        for button in self.buttons:
+#        for button in self.btnLookup.values():
+        for button in self.buttons:
             button.resize((imageSize, imageSize))

@@ -89,8 +89,8 @@ class GridButton(Gtk.ToggleButton):
                y < 0 or y >= self.parent.rows: continue
 
             # TODO: Grid.get_child_at(x, y) needs gtk 3.2. Meanwhile use dict
-            neighbour = self.parent.btnLookup[(x, y)]
-#            neighbour = self.parent.grid.get_child_at(x, y)
+#            neighbour = self.parent.btnLookup[(x, y)]
+            neighbour = self.parent.grid.get_child_at(x, y)
             self.neighbourList.append(neighbour)
 
             # count the neighbours that are mined
