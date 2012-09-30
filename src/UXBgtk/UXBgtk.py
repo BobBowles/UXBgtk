@@ -119,8 +119,11 @@ class UXBgtk:
                                    cols=cols, rows=rows, mines=mines)
         self.gridContainer.add_with_viewport(self.gameGrid)
 
+        # configure the toolbar widgets sensitivity
+        self.hintButton.set_sensitive(True)     # enable hints during a game
+        self.pbcButton.set_sensitive(False)     # can't change pbc during a game
+
         # start the game
-        self.hintButton.set_sensitive(True)
         self.gameGrid.start()
         self.window.show_all()
 
