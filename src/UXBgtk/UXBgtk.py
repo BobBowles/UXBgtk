@@ -122,6 +122,7 @@ class UXBgtk:
         # configure the toolbar widgets sensitivity
         self.hintButton.set_sensitive(True)     # enable hints during a game
         self.pbcButton.set_sensitive(False)     # can't change pbc during a game
+        self.configurationBox.set_button_sensitivity(Gtk.SensitivityType.OFF)
 
         # start the game
         self.gameGrid.start()

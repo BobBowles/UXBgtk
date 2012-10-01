@@ -158,10 +158,13 @@ class GridWindow(Gtk.Frame):
         # update the sensitivity of the other toolbar buttons
         self.parent.hintButton.set_sensitive(False)
         self.parent.pbcButton.set_sensitive(True)
+        self.parent.configurationBox.set_button_sensitivity(
+                                                        Gtk.SensitivityType.ON)
 
 
     def giveHint(self):
-        """Find an unplayed, unmined button near a played button and reveal it."""
+        """Find an unplayed, unmined button near a played button and reveal it.
+        """
 
         # get a randomised list of all the buttons
         buttons = self.buttons[:]
