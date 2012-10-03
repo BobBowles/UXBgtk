@@ -203,14 +203,6 @@ class GridWindow(Gtk.Frame):
         imageHeight = gridHeight // self.rows - 10
         imageSize = min(imageWidth, imageHeight)
 
-        # work out the new allocation
-        newWidth = (imageSize + 10) * self.cols
-        newHeight = (imageSize + 10) * self.rows
-
-        # set the allocation
-        allocation.width = newWidth
-        allocation.height = newHeight
-
         # now tell the buttons to sort themselves out
         for button in self.buttons:
             button.resize((imageSize, imageSize))

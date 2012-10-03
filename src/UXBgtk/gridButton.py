@@ -114,12 +114,8 @@ class GridButton(Gtk.ToggleButton):
         """Resize the grid button's child (image or text) to match the current
         window size. (The button looks after itself.)"""
 
-        if self.imageSize == imageSize: # save some cpu cycles
-            return
-
-        else:
-            self.imageSize = imageSize
-            updateImage(self.image, self.imageKey, self.imageSize)
+        self.imageSize = imageSize
+        updateImage(self.image, self.imageKey, self.imageSize)
 
 
     def on_button_press_event(self, widget, event):

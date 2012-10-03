@@ -21,12 +21,6 @@ from getImage import initializeImages, getImage, updateImage
 from gridWindow import GridWindow
 
 
-def getAllocatedSize(allocation):
-    """Obtain the width and height from a Gtk.Allocation as a tuple.
-    Returns a tuple (width, height)."""
-    return allocation.width, allocation.height
-
-
 
 class UXBgtk:
     """The main game UI"""
@@ -194,12 +188,10 @@ class UXBgtk:
         # do nothing if the game grid is not ready
         if not self.gameGrid: return
 
-        # TODO: try to limit the number of times this gets invoked
-
+        # check to see if this is a real resize
         allocation = self.gridContainer.get_allocation()
-
-        # see if the allocation has changed
-        if allocation == self.previousAllocation:
+        if allocation.width == self.previousAllocation.width and \
+           allocation.height == self.previousAllocation.height:
             return
         else:
             self.previousAllocation = allocation
