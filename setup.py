@@ -32,7 +32,7 @@ targetLocaleRoot = ''
 if os.name == 'nt': targetLocaleRoot = os.path.join('C:', 'Python32')
 elif os.name == 'posix': targetLocaleRoot = os.path.join('/', 'usr', 'share')
 
-# sort out the data files for the app (includes language files if present)
+# sort out the data files for the app
 dataFiles = []
 
 # sort out package data (e.g. gifs etc used in the app)
@@ -40,13 +40,19 @@ fileList = []
 packageDir = 'src'
 packageRoot = os.path.join(packageDir, 'UXBgtk')
 dataRoot = 'images'
-for dir in os.listdir(os.path.join(packageRoot, dataRoot)):
-    path = os.path.join(packageRoot, dataRoot, dir)
-    if os.path.isdir(path):
-        for file in os.listdir(path):
-            fileList.append(os.path.join(dataRoot, dir, file))
+#for dir in os.listdir(os.path.join(packageRoot, dataRoot)):
+#    path = os.path.join(packageRoot, dataRoot, dir)
+#    if os.path.isdir(path):
+for file in os.listdir(os.path.join(packageRoot, dataRoot)):
+    fileList.append(os.path.join(dataRoot, file))
+
+# add glade and css files, sort the results
+fileList.append('UXBgtk.css')
+fileList.append('UXBgtk.glade')
 fileList.sort()
+
 packageData = {'UXBgtk': fileList}
+print('Package data is: ' + str(packageData))
 
 # detect Ubuntu/Unity to decide what to do with the launcher
 from subprocess import Popen, PIPE
