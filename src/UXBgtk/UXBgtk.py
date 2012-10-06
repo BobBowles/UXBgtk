@@ -108,6 +108,9 @@ class UXBgtk:
         # destroy any pre-existing game
         if self.gameGrid != None: self.gameGrid.destroy()
 
+        # 'force' re-size at the start of the game
+        self.previousAllocation = None
+
         # make the new game
         self.gameGrid = GridWindow(parent=self,
                                    cols=cols, rows=rows, mines=mines)
@@ -190,7 +193,8 @@ class UXBgtk:
 
         # check to see if this is a real resize
         allocation = self.gridContainer.get_allocation()
-        if allocation.width == self.previousAllocation.width and \
+        if self.previousAllocation != None and \
+           allocation.width == self.previousAllocation.width and \
            allocation.height == self.previousAllocation.height:
             return
         else:
