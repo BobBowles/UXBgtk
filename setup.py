@@ -20,7 +20,7 @@ try:
     codecs.lookup('mbcs')
 except LookupError:
     ascii = codecs.lookup('ascii')
-    func = lambda name, enc=ascii: {True: enc}.get(name=='mbcs')
+    func = lambda name, enc = ascii: {True: enc}.get(name == 'mbcs')
     codecs.register(func)
 
 from distutils.core import setup
@@ -52,7 +52,6 @@ fileList.append('UXBgtk.glade')
 fileList.sort()
 
 packageData = {'UXBgtk': fileList}
-print('Package data is: ' + str(packageData))
 
 # detect Ubuntu/Unity to decide what to do with the launcher
 from subprocess import Popen, PIPE
@@ -79,7 +78,7 @@ setup(
     author_email='bobjohnbowles@gmail.com',
     url='http://pypi.python.org/pypi/UXBgtk/0.9',
     license='GNU General Public License v3 (GPLv3)', # TODO belt-n-braces??
-    keywords=["Mines",],
+    keywords=["Mines", ],
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
