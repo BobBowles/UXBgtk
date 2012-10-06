@@ -4,7 +4,10 @@ UXB Gtk
 =======
 
 An implementation of the well-known 'Mines' game in Python, using the Gtk+ 
-graphics library. This is derived from the author's 'Danger UXB' game.
+graphics library. This is derived from the author's 'Danger UXB' game, 
+but includes some additional features (notably a periodic boundary option) that
+were developed for this version. (Periodic boundaries have now been back-ported 
+to 'Danger UXB').
 
 There are no instructions on how to play. If it isn't self-evident from the UI
 then I have failed. Please email me (see below) to tell me how to make it 
