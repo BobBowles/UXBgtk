@@ -15,6 +15,7 @@
 
 from gi.repository import Gtk
 from getImage import getImage, updateImage
+from gtkPause import pause
 from constants import TOOL_SIZE, GRID_SIZE, BUTTON_PAD
 
 
@@ -149,17 +150,18 @@ class GridButton(Gtk.ToggleButton):
         """Left-Mouse handler. We use this to clear the area."""
 
         # action exclusions
-        if self.get_active(): return False
         if self.exposed: return False
         if self.flagged: return False
+        if self.exploded: return False
+
+        # disable the button and change its colour once it has been left-clicked
+        self.set_sensitive(False)
+        if not self.parent.exploded: self.set_active(True)
 
         exposedNeighbours = 0
 
         # end game - we hit a mine - lose
         if self.mined:
-            # change toggle state, prevent the button from being clicked again
-            self.set_sensitive(False)
-
             self.exploded = True
 
             # choose the image
@@ -168,47 +170,38 @@ class GridButton(Gtk.ToggleButton):
             else: # normal mode
                 self.set_active(True)
                 self.imageKey = 'Explosion' # lose
-                self.parent.exploded = True # notify end-game
 
             updateImage(self.image, self.imageKey, self.imageSize)
 
+            # short pause to let gtk sort itself out
+            if not self.parent.exploded:
+                pause(200)
+                self.parent.exploded = True # notify end-game
+
         else: # expose the button, display the number of neighbour mines
-            self.expose(self)
+            self.exposed = True
+
+            # update the image
+            self.imageKey = 'Empty'
+            if self.neighbourMines > 0:
+                self.imageKey = str(self.neighbourMines)
+            updateImage(self.image, self.imageKey, self.imageSize)
 
             # propagate exposure to the neighbours if mines = flags
             if self.neighbourFlags == self.neighbourMines:
                 for neighbour in self.neighbourList:
-
                     exposedNeighbours += neighbour.leftMouse(widget)
-
-            # reset the start button image
-            updateImage(self.parent.parent.startImage, 'Start', TOOL_SIZE)
 
         # update count of exposed buttons - potential win end game
         exposedNeighbours += 1 # add self to the count
         if widget == self:
             self.parent.incrementExposedCount(exposedNeighbours)
+
+            # reset the start button image
+            if not self.parent.gameOver:
+                updateImage(self.parent.parent.startImage, 'Start', TOOL_SIZE)
+
         else: return exposedNeighbours
-
-
-    def expose(self, widget):
-        """Reveal the number of neighbour mines for this button."""
-
-        # disable the button and change its colour once it has been left-clicked
-        self.set_sensitive(False)
-        if not self.parent.exploded: self.set_active(True)
-        self.exposed = True
-
-        self.imageKey = 'Empty'
-        if self.neighbourMines > 0:
-            self.imageKey = str(self.neighbourMines)
-
-        # update the image
-        updateImage(self.image, self.imageKey, self.imageSize)
-
-        # this is for when invoked by the game grid when giving hints
-        if widget != self:
-            self.parent.incrementExposedCount(1)
 
 
     def rightMouse(self):

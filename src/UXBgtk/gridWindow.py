@@ -178,7 +178,7 @@ class GridWindow(Gtk.Frame):
             if (self.flags + self.exposed):
                 for neighbour in button.neighbourList:
                     if neighbour.exposed or neighbour.flagged:
-                        button.expose(self)
+                        button.leftMouse(button)
                         return
 
             # at the start of the game no need to check neighbours

@@ -14,11 +14,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import time
 from gi.repository import Gtk, Gdk
 from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE, BUTTON_PAD
 from getImage import initializeImages, getImage, updateImage
 from gridWindow import GridWindow
+from gtkPause import pause
 
 
 
@@ -170,10 +170,7 @@ class UXBgtk:
         self.window.show_all()
 
         # wait a short time without blocking the Gtk event loop...
-        for milliseconds in range(2000):
-            while Gtk.events_pending():
-                Gtk.main_iteration()
-            time.sleep(.001)
+        pause(2000)
 
         # ...now kill the app
         self.window.destroy()
