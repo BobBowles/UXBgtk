@@ -173,7 +173,7 @@ class GridButton(Gtk.ToggleButton):
 
             updateImage(self.image, self.imageKey, self.imageSize)
 
-            # short pause to let gtk sort itself out
+            # short pause to let gtk events sort themselves out
             if not self.parent.exploded:
                 pause(200)
                 self.parent.exploded = True # notify end-game
