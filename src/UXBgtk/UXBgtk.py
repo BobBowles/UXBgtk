@@ -23,11 +23,15 @@ from gtkPause import pause
 
 
 class UXBgtk:
-    """The main game UI"""
+    """
+    The main game UI.
+    """
 
 
     def __init__(self):
-        """Load the main UI elements from the .glade file."""
+        """
+        Load the main UI elements from the .glade file.
+        """
 
         self.builder = Gtk.Builder()
         self.builder.add_from_file(UI_BUILD_FILE)
@@ -60,10 +64,10 @@ class UXBgtk:
         self.configurationBox = self.builder.get_object('configurationBox')
 
         # an alternative quit button
-        self.quitButton = self.builder.get_object('quitButton')
-        self.quitImage = getImage('Quit')
-        updateImage(self.quitImage, 'Quit', TOOL_SIZE)
-        self.quitButton.add(self.quitImage)
+        self.resetButton = self.builder.get_object('resetButton')
+        self.resetImage = getImage('Reset')
+        updateImage(self.resetImage, 'Reset', TOOL_SIZE)
+        self.resetButton.add(self.resetImage)
 
         # these are the status bar widgets
         self.exposedCount = self.builder.get_object('exposedCount')
@@ -86,7 +90,9 @@ class UXBgtk:
 
 
     def start(self):
-        """Start a new game."""
+        """
+        Start a new game.
+        """
 
         # reset the start button image
         updateImage(self.startImage, 'Start', TOOL_SIZE)
@@ -117,8 +123,8 @@ class UXBgtk:
         self.gridContainer.add_with_viewport(self.gameGrid)
 
         # configure the toolbar widgets sensitivity
-        self.hintButton.set_sensitive(True)     # enable hints during a game
-        self.pbcButton.set_sensitive(False)     # can't change pbc during a game
+        self.hintButton.set_sensitive(True)  # enable hints during a game
+        self.pbcButton.set_sensitive(False)  # can't change pbc during a game
         self.configurationBox.set_button_sensitivity(Gtk.SensitivityType.OFF)
 
         # start the game
@@ -127,25 +133,33 @@ class UXBgtk:
 
 
     def on_window_destroy(self, widget):
-        """Handler for closing window. A quick clean kill."""
+        """
+        Handler for closing window. A quick clean kill of the entire app.
+        """
 
         Gtk.main_quit()
 
 
     def on_startButton_clicked(self, widget):
-        """Handler for the start button."""
+        """
+        Handler for the start button.
+        """
 
         self.start()
 
 
     def on_hintButton_clicked(self, widget):
-        """Handler for the hint button."""
+        """
+        Handler for the hint button.
+        """
 
         self.gameGrid.giveHint()
 
 
     def on_pbcButton_toggled(self, widget):
-        """Handler for the periodic boundary condition button."""
+        """
+        Handler for the periodic boundary condition button.
+        """
 
         if self.pbcButton.get_active():
             updateImage(self.pbcImage, 'PBC_On', TOOL_SIZE)
@@ -153,37 +167,66 @@ class UXBgtk:
             updateImage(self.pbcImage, 'PBC_Off', TOOL_SIZE)
 
 
-    def on_quitButton_clicked(self, widget):
-        """Handler for the quit button. A more theatrical death."""
+    def explodeGame(self):
+        """
+        Make an explosion effect on the screen as the grid is destroyed.
+        """
 
         # obtain the size of the playing area
         size = (self.gridContainer.get_allocated_width(),
                 self.gridContainer.get_allocated_height())
 
+        # make the explosion flashImage
+        flashImage = getImage('Explosion')
+        updateImage(flashImage, 'Explosion', size)
+        self.gridContainer.add_with_viewport(flashImage)
+
+        # flash the explosion 5 times
+        for i in range(5):
+
+            # display the explosion
+            updateImage(self.startImage, 'Click', TOOL_SIZE)
+            flashImage.show()
+            pause(100)  # wait 200ms without blocking the Gtk event loop
+
+            # hide the explosion
+            updateImage(self.startImage, 'Lose', TOOL_SIZE)
+            flashImage.hide()
+            pause(100)  # wait 200ms without blocking the Gtk event loop
+
+        # ... then destroy the explosion image
+        flashImage.destroy()
+
+
+    def on_resetButton_clicked(self, widget):
+        """
+        Handler for the reset button. A theatrical way to kill the current
+        game.
+        """
+
         # get rid of the old game
         if self.gameGrid != None: self.gameGrid.destroy()
 
-        # flash up an image
-        image = getImage('Explosion')
-        updateImage(image, 'Explosion', size)
-        self.gridContainer.add_with_viewport(image)
-        self.window.show_all()
+        self.explodeGame()
 
-        # wait a short time without blocking the Gtk event loop...
-        pause(2000)
-
-        # ...now kill the app
-        self.window.destroy()
+        # configure the toolbar widgets sensitivity
+        self.hintButton.set_sensitive(False)
+        self.pbcButton.set_sensitive(True)
+        self.configurationBox.set_button_sensitivity(Gtk.SensitivityType.ON)
 
 
     def on_configurationBox_changed(self, widget):
-        """Reset stuff that needs to be reset for creating the game grid."""
+        """
+        Reset stuff that needs to be reset for creating the game grid.
+        """
 
-        pass        # atm nothing needs to be changed here
+        pass  # atm nothing needs to be changed here
 
 
     def on_window_check_resize(self, widget):
-        """Handler for resizing the game grid images. """
+        """
+        Handler for resizing the game grid images.
+        """
 
         # do nothing if the game grid is not ready
         if not self.gameGrid: return

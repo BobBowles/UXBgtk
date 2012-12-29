@@ -24,7 +24,9 @@ scaledImageCache = dict.fromkeys(IMAGE_NAMES)
 
 
 def initializeImages():
-    """Initialize the cache of pixbufs."""
+    """
+    Initialize the cache of pixbufs.
+    """
 
     for key in imageCache.keys():
         file = os.path.join(UI_GRAPHICS_PATH, IMAGE_NAMES[key])
@@ -32,15 +34,19 @@ def initializeImages():
 
 
 def getImage(name):
-    """Obtain an image from a pre-cached pixbuf."""
+    """
+    Obtain an image from a pre-cached pixbuf.
+    """
 
     return Gtk.Image().new_from_pixbuf(imageCache[name])
 
 
 def updateImage(image, name, size):
-    """Update an image using the file database via an image name key. The image
+    """
+    Update an image using the file database via an image name key. The image
     is sized according to the size tuple. A cache is used to reduce the
-    computation of resized images."""
+    computation of resized images.
+    """
 
     # update the cache if needed
     if scaledImageCache[name] == None or scaledImageCache[name][0] != size:

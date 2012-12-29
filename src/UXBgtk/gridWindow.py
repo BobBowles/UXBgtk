@@ -23,9 +23,15 @@ from constants import TOOL_SIZE, BUTTON_PAD
 
 
 class GridWindow(Gtk.Frame):
-    """This class defines the layout of the grid buttons for the game."""
+    """
+    This class defines the layout of the grid buttons for the game.
+    """
 
     def __init__(self, parent=None, rows=1, cols=1, mines=[]):
+        """
+        Initialize the grid of mine tiles and the game parameters.
+        """
+
         super().__init__()
 
         # reference to the parent object
@@ -70,7 +76,9 @@ class GridWindow(Gtk.Frame):
 
 
     def createWidgets(self):
-        """Make up the grid of buttons for the game."""
+        """
+        Make up the grid of buttons for the game.
+        """
 
         for x in range(self.cols):
             for y in range(self.rows):
@@ -84,7 +92,9 @@ class GridWindow(Gtk.Frame):
 
 
     def start(self):
-        """Prepare the grid before the player starts pressing buttons..."""
+        """
+        Prepare the grid before the player starts pressing buttons...
+        """
 
         # work out the neighbour bomb counts for this game
         for button in self.buttons:
@@ -92,8 +102,10 @@ class GridWindow(Gtk.Frame):
 
 
     def incrementExposedCount(self, increment):
-        """Every time a button is exposed increment the count. When the count is
-        big enough the game has been won."""
+        """
+        Every time a button is exposed increment the count. When the count is
+        big enough the game has been won.
+        """
 
         # no count required during cleardown
         if self.gameOver: return
@@ -106,9 +118,11 @@ class GridWindow(Gtk.Frame):
 
 
     def updateFlags(self, increment):
-        """Increment or decrement the count of flags used when notified of
+        """
+        Increment or decrement the count of flags used when notified of
         a change. The Boolean increment argument determines whether we add or
-        remove from the tally."""
+        remove from the tally.
+        """
 
         if increment: self.flags += 1
         else: self.flags -= 1
@@ -119,7 +133,9 @@ class GridWindow(Gtk.Frame):
 
 
     def haveWeWonYet(self):
-        """Have we won yet?"""
+        """
+        Have we won yet?
+        """
 
         if self.exploded: self.endGame(False)
 
@@ -129,7 +145,9 @@ class GridWindow(Gtk.Frame):
 
 
     def endGame(self, success):
-        """Finish the game."""
+        """
+        Finish the game.
+        """
 
         self.gameOver = True # avoids recursion issues during cleardown
 
@@ -163,7 +181,8 @@ class GridWindow(Gtk.Frame):
 
 
     def giveHint(self):
-        """Find an unplayed, unmined button near a played button and reveal it.
+        """
+        Find an unplayed, unmined button near a played button and reveal it.
         """
 
         # get a randomised list of all the buttons
@@ -191,8 +210,10 @@ class GridWindow(Gtk.Frame):
 
 
     def resize(self, allocation):
-        """Defines the resize behaviour of the button grid. The allocation is
-        taken from the gridContainer in the parent window."""
+        """
+        Defines the resize behaviour of the button grid. The allocation is
+        taken from the gridContainer in the parent window.
+        """
 
         # work out the best size for the grid buttons
         gridWidth = allocation.width

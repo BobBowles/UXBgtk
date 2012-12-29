@@ -29,13 +29,17 @@ for x in range(-1, 2):
 
 
 class GridButton(Gtk.ToggleButton):
-    """Visual representation of a minefield grid square. Contains all the
-    information it needs to display itself and interact with the game."""
+    """
+    Visual representation of a minefield grid square. Contains all the
+    information it needs to display itself and interact with the game.
+    """
 
 
     def __init__(self, parent=None, pos=None, mined=False):
-        """Do the class initialization and prepare the game-specific
-        attributes."""
+        """
+        Do the class initialization and prepare the game-specific
+        attributes.
+        """
 
         super().__init__()
 
@@ -74,9 +78,11 @@ class GridButton(Gtk.ToggleButton):
 
 
     def updateNeighbourMines(self):
-        """Update the number of neighbouring mines after initialization. This
+        """
+        Update the number of neighbouring mines after initialization. This
         only happens at the start of each game, but the cache of neighbours is
-        used later."""
+        used later.
+        """
 
         # decide if periodic boundaries are being applied
         pbc = self.parent.parent.pbcButton.get_active()
@@ -103,25 +109,31 @@ class GridButton(Gtk.ToggleButton):
 
 
     def updateNeighbourFlags(self, increment):
-        """Increment or decrement the count of neighbour flags when notified of
+        """
+        Increment or decrement the count of neighbour flags when notified of
         a change. The Boolean increment argument determines whether we add or
-        remove from the tally."""
+        remove from the tally.
+        """
 
         if increment: self.neighbourFlags += 1
         else: self.neighbourFlags -= 1
 
 
     def resize(self, imageSize):
-        """Resize the grid button's child (image or text) to match the current
-        window size. (The button looks after itself.)"""
+        """
+        Resize the grid button's child (image or text) to match the current
+        window size. (The button looks after itself.)
+        """
 
         self.imageSize = imageSize
         updateImage(self.image, self.imageKey, self.imageSize)
 
 
     def on_button_press_event(self, widget, event):
-        """Event handler for button presses. The handler must decide which
-        mouse button was clicked. We are only interested in leftMouse clicks."""
+        """
+        Event handler for button presses. The handler must decide which
+        mouse button was clicked. We are only interested in leftMouse clicks.
+        """
 
         # determine left- or right- click, feed the appropriate method. 
         if event.get_button()[1] == 1: # left-mouse
@@ -132,9 +144,11 @@ class GridButton(Gtk.ToggleButton):
 
 
     def on_button_release_event(self, widget, event):
-        """Event handler for button releases. The handler must decide which
+        """
+        Event handler for button releases. The handler must decide which
         mouse button was clicked. The invocation is forwarded to leftMouse() or
-        rightMouse()."""
+        rightMouse().
+        """
 
         # determine left- or right- click, feed the appropriate method.
         if event.get_button()[1] == 1: # left-mouse
@@ -147,7 +161,9 @@ class GridButton(Gtk.ToggleButton):
 
 
     def leftMouse(self, widget):
-        """Left-Mouse handler. We use this to clear the area."""
+        """
+        Left-Mouse handler. We use this to clear the area.
+        """
 
         # action exclusions
         if self.exposed: return False
@@ -166,7 +182,7 @@ class GridButton(Gtk.ToggleButton):
 
             # choose the image
             if self.parent.exploded: # cleardown mode
-                self.imageKey = 'Quit'
+                self.imageKey = 'UXB'
             else: # normal mode
                 self.set_active(True)
                 self.imageKey = 'Explosion' # lose
@@ -205,7 +221,9 @@ class GridButton(Gtk.ToggleButton):
 
 
     def rightMouse(self):
-        """Right-Mouse handler. We use this to toggle mine flags."""
+        """
+        Right-Mouse handler. We use this to toggle mine flags.
+        """
 
         # action exclusions
         if not self.get_sensitive(): return

@@ -18,8 +18,10 @@ Created on 13 Sep 2012
 @author: bob
 """
 
-"""This file just collects all the configuration constants used by the game in
-one place for ease of maintenance."""
+"""
+This file just collects all the configuration constants used by the game in
+one place for ease of maintenance.
+"""
 
 import os
 
@@ -43,7 +45,8 @@ IMAGE_NAMES = {
                'Explosion': 'Explosion.gif',
 
                # toolbar button images
-               'Quit': 'UXB.gif',
+               'UXB': 'UXB.gif',
+               'Reset': 'UXB.gif',
                'Win': 'VeryHappy.gif',
                'Lose': 'Confused.gif',
                'Start': 'Smile.gif',

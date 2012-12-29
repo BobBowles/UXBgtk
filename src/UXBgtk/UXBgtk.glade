@@ -150,7 +150,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="quitButton">
+              <object class="GtkButton" id="resetButton">
                 <property name="use_action_appearance">False</property>
                 <property name="width_request">50</property>
                 <property name="height_request">50</property>
@@ -159,7 +159,7 @@
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="xalign">0.50999999046325684</property>
-                <signal name="clicked" handler="on_quitButton_clicked" swapped="no"/>
+                <signal name="clicked" handler="on_resetButton_clicked" swapped="no"/>
                 <child>
                   <placeholder/>
                 </child>
