@@ -96,10 +96,10 @@ class GridButton(Gtk.ToggleButton):
             # grid boundary conditions
             if x < 0 or x >= self.parent.cols or \
                y < 0 or y >= self.parent.rows:
-                if pbc:             # apply periodic constraints to grid numbers
+                if pbc:  # apply periodic constraints to grid numbers
                     x = x % self.parent.cols
                     y = y % self.parent.rows
-                else: continue      # no neighbours beyond grid edge
+                else: continue  # no neighbours beyond grid edge
 
             neighbour = self.parent.grid.get_child_at(x, y)
             self.neighbourList.append(neighbour)
@@ -135,8 +135,8 @@ class GridButton(Gtk.ToggleButton):
         mouse button was clicked. We are only interested in leftMouse clicks.
         """
 
-        # determine left- or right- click, feed the appropriate method. 
-        if event.get_button()[1] == 1: # left-mouse
+        # determine left- or right- click, feed the appropriate method.
+        if event.get_button()[1] == 1:  # left-mouse
             updateImage(self.parent.parent.startImage, 'Click', TOOL_SIZE)
 #        else:
 #            print('Event button # is ' + str(event.get_button())
@@ -151,9 +151,9 @@ class GridButton(Gtk.ToggleButton):
         """
 
         # determine left- or right- click, feed the appropriate method.
-        if event.get_button()[1] == 1: # left-mouse
+        if event.get_button()[1] == 1:  # left-mouse
             self.leftMouse(widget)
-        elif event.get_button()[1] == 3: # right-mouse
+        elif event.get_button()[1] == 3:  # right-mouse
             self.rightMouse()
 #        else:
 #            print('Mouse button ' + str(event.get_button())
@@ -166,9 +166,13 @@ class GridButton(Gtk.ToggleButton):
         """
 
         # action exclusions
-        if self.exposed: return False
-        if self.flagged: return False
-        if self.exploded: return False
+        if self.flagged:
+            if widget == self:  # and not self.parent.exploded:
+                self.set_active(self.flagged)
+                updateImage(self.parent.parent.startImage, 'Start', TOOL_SIZE)
+            return False
+        if self.exposed or self.exploded:
+            return False
 
         # disable the button and change its colour once it has been left-clicked
         self.set_sensitive(False)
@@ -181,20 +185,20 @@ class GridButton(Gtk.ToggleButton):
             self.exploded = True
 
             # choose the image
-            if self.parent.exploded: # cleardown mode
+            if self.parent.exploded:  # cleardown mode
                 self.imageKey = 'UXB'
-            else: # normal mode
+            else:  # normal mode
                 self.set_active(True)
-                self.imageKey = 'Explosion' # lose
+                self.imageKey = 'Explosion'  # lose
 
             updateImage(self.image, self.imageKey, self.imageSize)
 
             # short pause to let gtk events sort themselves out
             if not self.parent.exploded:
                 pause(200)
-                self.parent.exploded = True # notify end-game
+                self.parent.exploded = True  # notify end-game
 
-        else: # expose the button, display the number of neighbour mines
+        else:  # expose the button, display the number of neighbour mines
             self.exposed = True
 
             # update the image
@@ -209,7 +213,7 @@ class GridButton(Gtk.ToggleButton):
                     exposedNeighbours += neighbour.leftMouse(widget)
 
         # update count of exposed buttons - potential win end game
-        exposedNeighbours += 1 # add self to the count
+        exposedNeighbours += 1  # add self to the count
         if widget == self:
             self.parent.incrementExposedCount(exposedNeighbours)
 
