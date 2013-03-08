@@ -163,9 +163,10 @@ class GridWindow(Gtk.Frame):
                     button.flagged = False
                     button.set_active(True)
                     self.updateFlags(False)
+                    button.leftMouse(button)
 
-            # 'press' the button
-            button.leftMouse(button)
+            else:  # 'press' the button
+                button.leftMouse(button)
 
         # update the start button image
         if success:

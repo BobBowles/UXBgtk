@@ -167,8 +167,8 @@ class GridButton(Gtk.ToggleButton):
 
         # action exclusions
         if self.flagged:
-            if widget == self:  # and not self.parent.exploded:
-                self.set_active(self.flagged)
+            if widget == self and not self.parent.exploded:
+                self.set_active(False)  # TODO: not sure why this works
                 updateImage(self.parent.parent.startImage, 'Start', TOOL_SIZE)
             return False
         if self.exposed or self.exploded:
