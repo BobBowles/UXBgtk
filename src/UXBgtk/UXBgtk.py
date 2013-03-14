@@ -129,6 +129,7 @@ class UXBgtk:
 
         # start the game
         self.gameGrid.start()
+        self.gameGrid.giveHint()
         self.window.show_all()
 
 
