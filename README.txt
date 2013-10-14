@@ -19,10 +19,13 @@ There are also no timers, clocks, or high-score charts. That way, every time you
 finish is an achievement. The emphasis is on the fun of playing the game rather 
 than 'winning'.
 
+The most recent change (v1.0) introduces saving and restoring the game 
+configuration (but not the game itself) between sessions.
+
 Installation
 ============
 
-For Version 0.9 the only supported platform is Linux, although *in theory* this
+For Version 1.0 the only supported platform is Linux, although *in theory* this
 game should play equally well on Windows or Mac. I would like to hear from
 anyone who can help with porting.
 
@@ -54,8 +57,8 @@ It took me a while to get to grips with Gtk+, but here it is.
 This version of the game includes a periodic boundary option. Hopefully it is 
 fairly obvious from the button icons, but in any case some tinkering as you 
 play should help you work out what does what. Certainly, if you are feeling a 
-little jaded with the 'normal' game, you will find the pbc option adds a little 
-extra challenge...
+little jaded with the 'normal' game, you will find periodic boundary conditions 
+add a little extra challenge...
 
 I found a bug in the introspected bindings, where the 
 ``Gtk.Grid.get_child_at()`` method is not mapped. I am assured this has been 

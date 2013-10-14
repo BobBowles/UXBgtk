@@ -14,8 +14,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
+import os
+import ast
 from gi.repository import Gtk, Gdk
+from configparser import SafeConfigParser
 from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE, BUTTON_PAD
+from constants import CONFIG_FILE
+from constants import UI_SECTION, WINDOW_SIZE
+from constants import GAME_PARAMS_SECTION, PBC, CONFIGURATION
 from getImage import initializeImages, getImage, updateImage
 from gridWindow import GridWindow
 from gtkPause import pause
@@ -30,7 +36,18 @@ class UXBgtk:
 
     def __init__(self):
         """
-        Load the main UI elements from the .glade file.
+        Initialize the UI.
+        """
+
+        self.initializeGUI()
+        self.restoreConfiguration()
+
+        self.window.show_all()
+
+
+    def initializeGUI(self):
+        """
+        Load the main GUI elements from the .glade file.
         """
 
         self.builder = Gtk.Builder()
@@ -86,13 +103,68 @@ class UXBgtk:
 
         # get a reference to the main window itself and display the window
         self.window = self.builder.get_object('window')
-        self.window.show_all()
+
+
+    def restoreConfiguration(self):
+        """
+        Get the UI and game parameters from the last time the game was played.
+        """
+
+        self.configuration = SafeConfigParser()
+        configList = self.configuration.read([CONFIG_FILE], encoding='utf-8')
+        if configList:
+
+            # restore the last saved window size
+            if self.configuration[UI_SECTION][WINDOW_SIZE]:
+                geometry = \
+                    self.configuration[UI_SECTION][WINDOW_SIZE].split(',')
+                x, y = (int(coord) for coord in geometry)
+                self.window.resize(x, y)
+
+            # restore the game parameters...
+
+            # ...periodic boundary toggle
+            if self.configuration[GAME_PARAMS_SECTION][PBC]:
+                self.pbcButton.set_active(
+                    ast.literal_eval(
+                        self.configuration[GAME_PARAMS_SECTION][PBC]))
+
+            # ...grid size and number of mines
+            if self.configuration[GAME_PARAMS_SECTION][CONFIGURATION]:
+                self.configurationBox.set_active(
+                    int(self.configuration[GAME_PARAMS_SECTION][CONFIGURATION]))
+
+        else:  # first time, create a vanilla configuration
+            self.configuration.add_section(UI_SECTION)
+            self.configuration.add_section(GAME_PARAMS_SECTION)
+            self.saveConfiguration()
+
+
+    def saveConfiguration(self):
+        """
+        Save any changes to the configuration options.
+        """
+
+        self.configuration.set(UI_SECTION, WINDOW_SIZE,
+                               ', '.join(str(coord)
+                                         for coord in self.window.get_size()))
+
+        self.configuration.set(GAME_PARAMS_SECTION, PBC,
+                               str(self.pbcButton.get_active()))
+        self.configuration.set(GAME_PARAMS_SECTION, CONFIGURATION,
+                               str(self.configurationBox.get_active()))
+
+        os.makedirs(os.path.dirname(CONFIG_FILE), exist_ok=True)
+        with open(CONFIG_FILE, 'w', encoding='utf-8') as configurationFile:
+            self.configuration.write(configurationFile)
 
 
     def start(self):
         """
         Start a new game.
         """
+
+        self.saveConfiguration()
 
         # reset the start button image
         updateImage(self.startImage, 'Start', TOOL_SIZE)
@@ -221,7 +293,7 @@ class UXBgtk:
         Reset stuff that needs to be reset for creating the game grid.
         """
 
-        pass  # atm nothing needs to be changed here
+        pass  # no further action needed atm
 
 
     def on_window_check_resize(self, widget):
@@ -234,13 +306,14 @@ class UXBgtk:
 
         # check to see if this is a real resize
         allocation = self.gridContainer.get_allocation()
-        if self.previousAllocation != None and \
-           allocation.width == self.previousAllocation.width and \
-           allocation.height == self.previousAllocation.height:
+        if (self.previousAllocation != None and
+            allocation.width == self.previousAllocation.width and
+            allocation.height == self.previousAllocation.height):
             return
         else:
             self.previousAllocation = allocation
             self.gameGrid.resize(allocation)
+            self.saveConfiguration()
 
 
 # load the image pixbuf cache

@@ -39,6 +39,13 @@ dataFiles = []
 fileList = []
 packageDir = 'src'
 packageRoot = os.path.join(packageDir, 'UXBgtk')
+
+# get a reference to the version number from the package being built
+import sys
+sys.path.insert(0, packageDir)
+from UXBgtk import __version__
+
+
 dataRoot = 'images'
 #for dir in os.listdir(os.path.join(packageRoot, dataRoot)):
 #    path = os.path.join(packageRoot, dataRoot, dir)
@@ -71,12 +78,12 @@ else:
 # now run setup
 setup(
     name='UXBgtk',
-    version='0.9',
+    version=__version__,
     description='A Gtk version of the Mines game intended for casual play.',
     long_description=open('README.txt').read(),
     author='Bob Bowles',
     author_email='bobjohnbowles@gmail.com',
-    url='http://pypi.python.org/pypi/UXBgtk/0.9',
+    url='http://pypi.python.org/pypi/UXBgtk',
     license='GNU General Public License v3 (GPLv3)', # TODO belt-n-braces??
     keywords=["Mines", ],
     classifiers=[

@@ -66,3 +66,11 @@ IMAGE_NAMES = {
                '8': '8.gif',
                }
 
+
+# configuration file parameters
+CONFIG_FILE = os.path.expanduser('~/.config/UXBgtk/UXBgtk.cfg')
+UI_SECTION = 'ui'
+WINDOW_SIZE = 'window size'
+GAME_PARAMS_SECTION = 'game parameters'
+PBC = 'pbc'
+CONFIGURATION = 'configuration'
