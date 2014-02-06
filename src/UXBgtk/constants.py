@@ -33,6 +33,8 @@ UI_GRAPHICS_PATH = os.path.join(os.getcwd(), 'images')
 # define initial button sizes
 TOOL_BUTTON_SIZE = 50
 TOOL_SIZE = (TOOL_BUTTON_SIZE, TOOL_BUTTON_SIZE)
+STATUS_ICON_SIZE = 10
+STATUS_SIZE = (STATUS_ICON_SIZE, STATUS_ICON_SIZE)
 GRID_INITIAL_SIZE = 20
 BUTTON_PAD = 10
 GRID_SIZE = (GRID_INITIAL_SIZE, GRID_INITIAL_SIZE)
@@ -54,6 +56,10 @@ IMAGE_NAMES = {
                'Hint': 'Unsure.gif',
                'PBC_Off': 'SquareNoLoop.gif',
                'PBC_On': 'SquareLoop.gif',
+
+               # status bar icon images
+               'Exposed': 'Square.gif',
+               'Query': 'Query.gif',
 
                # the numbers
                '1': '1.gif',

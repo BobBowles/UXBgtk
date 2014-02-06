@@ -18,7 +18,8 @@ import os
 import ast
 from gi.repository import Gtk, Gdk
 from configparser import SafeConfigParser
-from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE, BUTTON_PAD
+from constants import UI_BUILD_FILE, UI_CSS_FILE, TOOL_SIZE, BUTTON_PAD, \
+    STATUS_SIZE
 from constants import CONFIG_FILE
 from constants import UI_SECTION, WINDOW_SIZE
 from constants import GAME_PARAMS_SECTION, PBC, CONFIGURATION
@@ -86,9 +87,15 @@ class UXBgtk:
         updateImage(self.resetImage, 'Reset', TOOL_SIZE)
         self.resetButton.add(self.resetImage)
 
-        # these are the status bar widgets
+        # these are the status bar widgets...
+
+        # ...exposed count
+        self.exposedIcon = self.setupStatusBarIcon('exposedIcon', 'Exposed')
         self.exposedCount = self.builder.get_object('exposedCount')
         self.exposedLabel = self.builder.get_object('exposedLabel')
+
+        # ...flag count
+        self.flagIcon = self.setupStatusBarIcon('flagIcon', 'Flag')
         self.flagCount = self.builder.get_object('flagCount')
         self.flagLabel = self.builder.get_object('flagLabel')
 
@@ -103,6 +110,18 @@ class UXBgtk:
 
         # get a reference to the main window itself and display the window
         self.window = self.builder.get_object('window')
+
+
+    def setupStatusBarIcon(self, iconName, imageName):
+        """
+        Add an icon image to a status bar button.
+        """
+
+        icon = self.builder.get_object(iconName)
+        image = getImage(imageName)
+        updateImage(image, imageName, STATUS_SIZE)
+        icon.add(image)
+        return icon
 
 
     def restoreConfiguration(self):
