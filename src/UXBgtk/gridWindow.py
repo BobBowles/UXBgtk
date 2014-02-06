@@ -53,6 +53,9 @@ class GridWindow(Gtk.Frame):
         # the number of flags in use
         self.flags = 0
 
+        # tally of number of hints requested
+        self.hints = 0
+
         # a convenient way to keep a reference to all the buttons
         self.buttons = list()
 
@@ -199,6 +202,11 @@ class GridWindow(Gtk.Frame):
                 for neighbour in button.neighbourList:
                     if neighbour.exposed or neighbour.flagged:
                         button.leftMouse(button)
+
+                        # increment hint count
+                        self.hints += 1
+                        self.parent.hintCount.set_text(str(self.hints))
+
                         return
 
             # at the start of the game no need to check neighbours

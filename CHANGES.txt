@@ -3,3 +3,4 @@ v1.0.1  2013-10-14  Conform versioning with PEP8, PEP396.
                     Make window size and game parameters stateful saved 
                     configurations.
 v1.1    2014-02-06  Add icons to status bar.
+                    Add hint count.

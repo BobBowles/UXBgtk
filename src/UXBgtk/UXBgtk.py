@@ -94,6 +94,10 @@ class UXBgtk:
         self.exposedCount = self.builder.get_object('exposedCount')
         self.exposedLabel = self.builder.get_object('exposedLabel')
 
+        # ...hint count
+        self.hintIcon = self.setupStatusBarIcon('hintIcon', 'Query')
+        self.hintCount = self.builder.get_object('hintCount')
+
         # ...flag count
         self.flagIcon = self.setupStatusBarIcon('flagIcon', 'Flag')
         self.flagCount = self.builder.get_object('flagCount')
@@ -199,6 +203,7 @@ class UXBgtk:
         # reset the status bar
         self.exposedCount.set_text('0')
         self.exposedLabel.set_text('/ ' + str(cols * rows - nMines))
+        self.hintCount.set_text('0')
         self.flagCount.set_text('0')
         self.flagLabel.set_text('/ ' + str(nMines))
 
