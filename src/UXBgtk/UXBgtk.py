@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
-import os
+import os, errno
 import ast
 from gi.repository import Gtk, Gdk
 from configparser import SafeConfigParser
@@ -177,7 +177,13 @@ class UXBgtk:
         self.configuration.set(GAME_PARAMS_SECTION, CONFIGURATION,
                                str(self.configurationBox.get_active()))
 
-        os.makedirs(os.path.dirname(CONFIG_FILE), exist_ok=True)
+        # FIXME: Issue13498 workaround behaviour of os.makedirs in Python3.2
+        try:
+            os.makedirs(os.path.dirname(CONFIG_FILE), exist_ok=True)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+
         with open(CONFIG_FILE, 'w', encoding='utf-8') as configurationFile:
             self.configuration.write(configurationFile)
 
