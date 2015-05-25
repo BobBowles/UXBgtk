@@ -19,13 +19,13 @@ There are also no timers, clocks, or high-score charts. That way, every time you
 finish is an achievement. The emphasis is on the fun of playing the game rather 
 than 'winning'.
 
-The most recent change (v1.0) introduces saving and restoring the game 
+The most recent change (v1.1) introduces saving and restoring the game 
 configuration (but not the game itself) between sessions.
 
 Installation
 ============
 
-For Version 1.0 the only supported platform is Linux, although *in theory* this
+For Version 1.1 the only supported platform is Linux, although *in theory* this
 game should play equally well on Windows or Mac. I would like to hear from
 anyone who can help with porting.
 
@@ -41,7 +41,7 @@ Installation (Linux):
 
     1.  Unzip the tar.gz somewhere.
 
-    2.  In a console window navigate to the UXBgtk-0.9 directory and run the
+    2.  In a console window navigate to the UXBgtk-1.1 directory and run the
         following command as root (on Ubuntu/Debian use sudo):
 
             ``[sudo] python3 setup.py install``

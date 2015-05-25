@@ -61,17 +61,24 @@ fileList.sort()
 packageData = {'UXBgtk': fileList}
 
 # detect Ubuntu/Unity to decide what to do with the launcher
-from subprocess import Popen, PIPE
 if os.name == 'posix':
-    pipe = Popen('ps aux | grep unity', shell=True, stdout=PIPE).stdout
 
-    # now scan the output for some unity tell-tale
-    if  'unity-panel-service' in str(pipe.read()):
-        print('Yay! Unity detected! Adding desktop launcher')
-        dataFiles.append((os.path.join(targetLocaleRoot, 'applications'),
-                          ['UXBgtk.desktop']))
-    else:
-        print('No Unity detected')
+#     # try to detect Unity. This is superfluous here
+#     from subprocess import Popen, PIPE
+#     pipe = Popen('ps aux | grep unity', shell=True, stdout=PIPE).stdout
+#
+#     # now scan the output for some unity tell-tale
+#     if  'unity-panel-service' in str(pipe.read()):
+#         print('Yay! Unity detected! Adding desktop launcher')
+#         dataFiles.append((os.path.join(targetLocaleRoot, 'applications'),
+#                           ['UXBgtk.desktop']))
+#     else:
+#         print('No Unity detected')
+
+    print('Linux detected! Adding desktop launcher')
+    dataFiles.append((os.path.join(targetLocaleRoot, 'applications'),
+                      ['UXBgtk.desktop']))
+
 else:
      print('Not posix')
 
