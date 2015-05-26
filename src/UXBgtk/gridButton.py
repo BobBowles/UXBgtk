@@ -46,6 +46,9 @@ class GridButton(Gtk.ToggleButton):
         # the game grid parent
         self.parent = parent
 
+        # give the button a name for css styling
+        self.set_name("gridButton")
+
         # this button's grid position.
         self.pos = pos
 

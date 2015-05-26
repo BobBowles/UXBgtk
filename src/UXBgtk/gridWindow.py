@@ -228,9 +228,9 @@ class GridWindow(Gtk.Frame):
         gridWidth = allocation.width
         gridHeight = allocation.height
 
-        # choose the smaller dimension for scaling the images
-        imageWidth = gridWidth // self.cols - 10
-        imageHeight = gridHeight // self.rows - 10
+        # subtracting 14 allows for margins and borders on the grid buttons.
+        imageWidth = gridWidth // self.cols - 14
+        imageHeight = gridHeight // self.rows - 14
         imageSize = min(imageWidth, imageHeight)
 
         # now tell the buttons to sort themselves out

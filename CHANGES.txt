@@ -4,4 +4,5 @@ v1.0.1  2013-10-14  Conform versioning with PEP8, PEP396.
                     configurations.
 v1.1    2014-02-06  Add icons to status bar.
                     Add hint count.
-                    Workaround for Issue13498
+                    Workaround for Issue13498 saving configuration.
+                    Remedial work on the appearance.

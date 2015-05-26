@@ -1,8 +1,25 @@
 
 GtkToggleButton {
-    background: #cccccc;
 }
 
-GtkToggleButton:active {
+#gridButton {
+    /* border: 0px; */
+    margin: 0px;
+    padding: 0px;
+    background: #888888;
+}
+
+#gridButton:active {
     background: #ffffff;
+}
+
+#gridButton:hover {
+    background: #ffa500;
+}
+
+/* this is a kludge to workaround the fact I can't stop the background of the 
+image going grey when the button is insensitive. I am guessing this might come 
+from the desktop theme engine. */
+#gridButton:insensitive {
+    background: #c2c2c2;
 }
